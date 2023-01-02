@@ -1,0 +1,34 @@
+<div class="couse-card" *ngIf="course">
+  <h3>{{course.title}}</h3>
+  <section>
+    <div class="content">
+      <p>{{ course.description }}</p>
+    </div>
+    <div class="description">
+      <p>
+        <b>Authors: </b>{{ course.authors.join(', ') }}<br>
+        <b>Duration: </b>{{ course.duration | minutesToHours }}<br>
+        <b>Created: </b>{{ course.creationDate | date: 'dd.MM.yyyy' }}
+      </p>
+      <div class="buttons">
+        <app-button class="btn" [buttonText]="showCoursesText"></app-button>
+        <ng-container *ngIf="editable">
+          <app-button class="btn" [buttonIconName]="trashIcon" (click)="deleteCourse()"></app-button>
+          <app-button class="btn" [buttonIconName]="pencilIcon"></app-button>
+        </ng-container>
+      </div>
+    </div>
+  </section>
+</div>
+
+<ng-template #confirm>
+  <ng-container *ngTemplateOutlet="confirmModalWindow; context:{msg: confirmOnDeleteMessage}">
+  </ng-container>
+</ng-template>
+
+<ng-content *ngIf="isConfirmWindowClosed; else confirmWindow"></ng-content>
+
+<ng-template #confirmWindow>
+  <app-confirm-window (confirmWindowButtonClicked)="onConfirmWindowClicked($event)" [title]="course.title"
+    [message]="confirmOnDeleteMessage"></app-confirm-window>
+</ng-template>

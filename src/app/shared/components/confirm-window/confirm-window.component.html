@@ -1,0 +1,21 @@
+<div class="modal ">
+  <div class="container">
+    <header>
+      <h2>"{{title}}" course deletion.</h2>
+      <fa-icon [icon]="xMarkBtn" (click)="cancelAndCloseModaleWindow()"></fa-icon>
+    </header>
+  </div>
+  <hr>
+
+  <div class="container">
+    <p>{{ message }}</p>
+
+    <div class="btns">
+      <app-button [buttonText]="okButtonText" (click)="confirmAndCloseModaleWindow()"></app-button>
+      <app-button [buttonText]=" cancelButtonText" (click)="cancelAndCloseModaleWindow()"></app-button>
+    </div>
+  </div>
+</div>
+
+<div class=" overlay">
+</div>

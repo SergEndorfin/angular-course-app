@@ -1,0 +1,64 @@
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  max-width: 60rem;
+  background-color: white;
+  box-shadow: 0 4rem 6rem rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  transition: all 0.5s;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  z-index: 100;
+  transition: all 0.5s;
+}
+
+.container {
+  padding: 15px;
+}
+
+.btns {
+  margin-top: 30px;
+  text-align: right;
+}
+
+app-button {
+  margin-right: 10px;
+}
+
+header {
+  // border: 1px solid red;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+h2 {
+  // border: 1px solid red;
+  padding: 0;
+  margin: 0;
+}
+
+fa-icon {
+  // border: 1px solid red;
+  margin-left: 25px;
+}
+
+fa-icon:hover {
+  background-color: antiquewhite;
+  margin-left: 25px;
+}
+
+fa-icon:active {
+  background-color: rgb(192, 188, 184);
+  margin-left: 25px;
+}

@@ -1,0 +1,9 @@
+<button>
+  <ng-container *ngIf="isButtonTextSet(); else icon">
+  </ng-container>
+  {{ buttonText }}
+</button>
+
+<ng-template #icon>
+  <fa-icon [icon]="setProperIconBtn()"></fa-icon>
+</ng-template>
