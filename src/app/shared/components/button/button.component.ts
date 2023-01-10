@@ -12,6 +12,7 @@ export class ButtonComponent {
 
   @Input() buttonText?: string;
   @Input() buttonIconName?: string;
+  @Input() disabled: boolean = false;
 
   isButtonTextSet() {
     return this.buttonText !== undefined;
@@ -25,5 +26,9 @@ export class ButtonComponent {
     } else {
       return faFaceSmile;
     }
+  }
+
+  clicked() {
+    console.log('ButtonComponent clicked!');
   }
 }

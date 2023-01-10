@@ -1,0 +1,5 @@
+@import url('../registration/registration.component.scss');
+
+input .ng-pristine .ng-invalid .ng-touched {
+  border: 1px solid red;
+}

@@ -1,21 +1,34 @@
-<app-header>
-  <img class="logo" src="../../../../assets/logo.svg" alt="logo" />
-  <span class="user-name">Garry Poter</span>
-  <app-button [buttonText]="logoutText"></app-button>
-</app-header>
-
-
-<!-- Demonstration purpose -->
-
 <div class="container">
-  <app-search-course></app-search-course>
 
-  <ng-container *ngFor="let course of courses">
+  <ng-container *ngIf="courses.length > 0; else info">
 
-    <app-course [editable]="true" [course]="course"></app-course>
+    <app-search-course (searchCourseEvent)="searchResult($event)"></app-search-course>
+
+    <ng-container *ngFor="let course of courses; index as i">
+      <app-course [course]="course">
+
+        <div class="buttons">
+          <app-button [buttonText]="showCoursesText"></app-button>
+          <ng-container *ngIf="editable">
+            <app-button [buttonIconName]="trashIcon" (click)="deleteCourse(course.title, i)"></app-button>
+            <app-button [buttonIconName]="pencilIcon" (click)="editCourse(course, i)"></app-button>
+          </ng-container>
+        </div>
+      </app-course>
+    </ng-container>
 
   </ng-container>
 
-  <hr>
-  <app-info></app-info>
+
+  <ng-template #info>
+    <ng-content></ng-content>
+  </ng-template>
+
+  <ng-content select=".add-course-btn"></ng-content>
 </div>
+
+<ng-container *ngIf="title">
+  <app-confirm-window (confirmWindowButtonClicked)="onConfirmWindowClicked($event)" [title]="title"
+    [message]="confirmOnDeleteMessage">
+  </app-confirm-window>
+</ng-container>

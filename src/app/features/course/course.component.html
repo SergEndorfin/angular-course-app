@@ -10,25 +10,7 @@
         <b>Duration: </b>{{ course.duration | minutesToHours }}<br>
         <b>Created: </b>{{ course.creationDate | date: 'dd.MM.yyyy' }}
       </p>
-      <div class="buttons">
-        <app-button class="btn" [buttonText]="showCoursesText"></app-button>
-        <ng-container *ngIf="editable">
-          <app-button class="btn" [buttonIconName]="trashIcon" (click)="deleteCourse()"></app-button>
-          <app-button class="btn" [buttonIconName]="pencilIcon"></app-button>
-        </ng-container>
-      </div>
+      <ng-content select=".buttons"></ng-content>
     </div>
   </section>
 </div>
-
-<ng-template #confirm>
-  <ng-container *ngTemplateOutlet="confirmModalWindow; context:{msg: confirmOnDeleteMessage}">
-  </ng-container>
-</ng-template>
-
-<ng-content *ngIf="isConfirmWindowClosed; else confirmWindow"></ng-content>
-
-<ng-template #confirmWindow>
-  <app-confirm-window (confirmWindowButtonClicked)="onConfirmWindowClicked($event)" [title]="course.title"
-    [message]="confirmOnDeleteMessage"></app-confirm-window>
-</ng-template>

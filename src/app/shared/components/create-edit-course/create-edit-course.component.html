@@ -1,0 +1,14 @@
+<div class="container">
+  <h2>Course Edit/Create Page</h2>
+  <div class="form">
+    <app-create-edit-course-form>
+
+      <div class="create-cancel-buttons">
+        <app-button [buttonText]="cancelBtnText" (click)="cancelCourseClicked($event)"></app-button>
+        <app-button [buttonText]="createCourseBtnText" (click)="createCourseClicked($event)"
+          [disabled]="isFormInvalid"></app-button>
+      </div>
+
+    </app-create-edit-course-form>
+  </div>
+</div>

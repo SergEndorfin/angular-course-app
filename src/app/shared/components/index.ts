@@ -1,15 +1,7 @@
-import { ButtonComponent } from './button/button.component';
-import { ConfirmWindowComponent } from './confirm-window/confirm-window.component';
-import { HeaderComponent } from './header/header.component';
-import { InfoComponent } from './info/info.component';
-import { SearchCourseComponent } from './search-course/search-course.component';
-
-export { faTrashCan } from '@fortawesome/free-regular-svg-icons';
-
-export const COMPONENTS = [
-  HeaderComponent,
-  ButtonComponent,
-  InfoComponent,
-  SearchCourseComponent,
-  ConfirmWindowComponent
-];
+export * from './button/button.component';
+export * from './info/info.component';
+export * from './confirm-window/confirm-window.component';
+export * from './header/header.component';
+export * from './search-course/search-course.component';
+export * from './create-edit-course/create-edit-course.component';
+export * from './create-edit-course-form/create-edit-course-form.component';

@@ -1,9 +1,9 @@
 .couse-card {
-  // border: 1px solid #180cf4;
   box-sizing: border-box;
   margin: 20px auto;
   padding: 10px;
   padding-left: 20px;
+  padding-right: 20px;
   max-width: 1440px;
 
   background: #FFF;
@@ -15,37 +15,27 @@
 h3 {
   padding: 0;
   margin: 0;
+  margin-top: 20px;
   font-size: 20px;
 }
 
 section {
-  // border: 1px solid red;
   display: flex;
+  justify-content: space-between;
 }
 
 .description {
   margin-left: 20px;
+  margin-bottom: 30px;
 }
 
 .description p {
-  width: 293px;
+  width: 290px;
+
 }
 
-.buttons {
-  // border: 3px solid black;
+::ng-deep .buttons {
   display: flex;
-  justify-content: left;
+  justify-content: space-between;
   align-items: center;
-}
-
-.btn {
-  margin: 0 5px;
-}
-
-.btn:first-of-type {
-  margin-left: 0;
-}
-
-.btn:last-of-type {
-  margin-right: 0;
 }

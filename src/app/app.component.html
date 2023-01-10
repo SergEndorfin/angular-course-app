@@ -1,1 +1,48 @@
-<app-courses></app-courses>
+<header>
+  <img class="logo" src="../assets/logo.svg" alt="logo" (click)="restartSearchResult()" />
+  <app-header>
+    <ng-container *ngIf="!isLoginPageVisible && !isRegistrationPageVisible">
+      <ng-container *ngIf="user; else logoutBtn">
+        <span class="user-name">{{ user.name }}</span>
+        <app-button [buttonText]="logoutText" (click)="onLogoutButtonClicked()"></app-button>
+      </ng-container>
+
+      <ng-template #logoutBtn>
+        <app-button [buttonText]="loginText" (click)="onLoginLinkClicked()"></app-button>
+      </ng-template>
+    </ng-container>
+  </app-header>
+</header>
+
+<!-- Login -->
+<app-login (loginEvent)="onLoginEvent($event)" *ngIf="isLoginPageVisible && !isRegistrationPageVisible">
+  <strong><a (click)="onRegistrationLinkClicked()">Registration</a></strong>
+</app-login>
+
+<!-- Registration -->
+<app-registration (registrationEvent)="onRegistratinEvent($event)"
+  *ngIf="!isLoginPageVisible && isRegistrationPageVisible">
+  <strong><a (click)="onLoginLinkClicked()">Login</a></strong>
+</app-registration>
+
+<!-- Content -->
+<ng-container *ngIf="!isLoginPageVisible && !isRegistrationPageVisible && !isAddNewCoursePageVisible">
+
+  <app-courses #courses [editable]="isUserLoggedIn()" (onEditCourse)="onEditCourseEvent($event)">
+    <app-info></app-info>
+    <div class="add-course-btn">
+      <app-button [buttonText]="addNewCourseButtonText" [disabled]="!isUserLoggedIn()"
+        (click)="onAddNewCourseLinkClicked()"></app-button>
+    </div>
+  </app-courses>
+
+  <!-- 
+  <app-courses [editable]="true" (onDeleteCourse)="" (onEditCourse)="">
+  </app-courses> 
+  -->
+</ng-container>
+
+
+<!-- Add new Course -->
+<app-create-edit-course [course]="course" (buttonClickedEvent)="onAddNewCourseEvent($event)"
+  *ngIf="isAddNewCoursePageVisible && !isLoginPageVisible && !isRegistrationPageVisible"></app-create-edit-course>

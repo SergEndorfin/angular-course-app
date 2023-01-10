@@ -1,0 +1,16 @@
+header {
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  background-color: #fff;
+  font-weight: 600;
+
+  padding-left: 37px;
+  padding-right: 30px;
+}
+
+.logo:hover {
+  cursor: pointer;
+}

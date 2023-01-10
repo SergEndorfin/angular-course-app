@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
-import { Course } from 'src/app/shared/components/model/course';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Course } from 'src/app/shared/model/course';
+import { CoursesService } from 'src/app/shared/services/courses.service';
 import { ButtonContent } from 'src/app/shared/utils/button-icon-name';
 
 @Component({
@@ -9,28 +10,45 @@ import { ButtonContent } from 'src/app/shared/utils/button-icon-name';
 })
 export class CoursesComponent {
 
-  loginText = ButtonContent.LOGIN;
-  logoutText = ButtonContent.LOGOUT;
+  @Input() editable!: boolean;
 
-  courses: Course[] = dammyData;
-}
+  @Output()
+  onEditCourse = new EventEmitter<Course>();
 
+  courses: Course[];
 
+  showCoursesText = ButtonContent.SHOW_COURSE;
+  pencilIcon = ButtonContent.PENCIL;
+  trashIcon = ButtonContent.TRASH;
 
+  title?: string;
+  index?: number;
+  confirmOnDeleteMessage = 'Confirm that you really want to delete the course.';
 
-const dammyData = [
-  {
-    title: 'Angular',
-    description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum',
-    creationDate: new Date('December 1, 2022 03:24:00'),
-    duration: 121,
-    authors: ['Dave Haisenberg', 'Tony Ja', 'Bob Bobson']
-  },
-  {
-    title: 'Angular-2',
-    description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum',
-    creationDate: new Date('December 17, 1995 03:24:00'),
-    duration: 90,
-    authors: ['Dave Haisenberg', 'Tony Ja']
+  constructor(private coursesService: CoursesService) {
+    this.courses = coursesService.getAllCourses();
   }
-];
+
+  deleteCourse(title: string, index: number) {
+    this.title = title;
+    this.index = index;
+  }
+
+  editCourse(course: Course, index: number) {
+    ////////////////////////////////////////////////////////////////////////////////////
+    course.id = index;
+    this.onEditCourse.emit(course);
+  }
+
+  onConfirmWindowClicked(buttonValue: string) {
+    if (buttonValue === ButtonContent.OK) {
+      this.coursesService.deleteById(this.index);
+      this.index = undefined;
+    }
+    this.title = undefined;
+  }
+
+  searchResult(coursesFound: Course[]) {
+    this.courses = coursesFound;
+  }
+}

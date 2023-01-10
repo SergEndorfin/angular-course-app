@@ -1,0 +1,78 @@
+form{ 
+  display: flex;
+  flex-direction: column;
+}
+
+h3 {
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 32px;
+  margin: 0;
+}
+
+.label {
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 20px;
+  margin-top: 20px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+}
+
+input, textarea {
+  width: 100%;
+  margin: 0;
+}
+
+textarea {
+  height: 130px;
+}
+
+.error {
+  color: red;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 20px;
+}
+
+.authors {
+  border-top: 1px solid #CFCFCF;
+  border-bottom: 1px solid #CFCFCF;
+  margin: 20px 0;
+  padding-bottom: 20px;
+}
+
+.row-field {
+  display: flex;
+}
+
+.row-field p {
+  min-width: 177px;
+  margin-left: 20px;
+  align-items: center;
+}
+
+.authors-list {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+fa-icon {
+  margin-left: 5px;
+  margin-right: 20px;
+}
+
+app-button {
+  margin-left: 20px;
+}
+
+fa-icon:hover {
+  background-color: antiquewhite;
+}
+
+fa-icon:active {
+  background-color: rgb(192, 188, 184);
+}

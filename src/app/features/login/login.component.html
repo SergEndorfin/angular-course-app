@@ -1,1 +1,38 @@
-<p>login works!</p>
+<h2>Login</h2>
+<div class="container">
+
+  <form #loginForm="ngForm" (ngSubmit)="login(email.value, password.value)">
+
+    <span>Email</span>
+    <div class="field">
+      <input name="email" placeholder="Select email" ngModel #email="ngModel" required emailValidator
+        [ngModelOptions]="{updateOn:'blur'}" (blur)="addErrorStyle(email.errors, email.touched!, $event.target)">
+      <div class="icon envelop">
+        <fa-icon [icon]="faEnvelope"></fa-icon>
+      </div>
+      <span *ngIf="email.errors?.['required'] && email.touched" class="error">Email is required.</span>
+      <span *ngIf="email.errors?.['emailInvalid']" class="error">Your email should have <b>"test@test.test"</b>
+        structure.</span>
+    </div>
+
+    <span>Password</span>
+    <div class="field">
+      <input name="password" type="password" placeholder="Select Password" #passwordField ngModel #password="ngModel"
+        required minlength="5" maxlength="10" (blur)="addErrorStyle(password.errors, password.touched!, $event.target)">
+      <div class="icon eye-slash">
+        <fa-icon [icon]="faEyeSlash" (click)="switchFieldTypeAndIcon(passwordField)"></fa-icon>
+      </div>
+      <span *ngIf="password.errors?.['required'] && password.touched" class="error">Password is required.</span>
+      <span *ngIf="password.errors?.['minlength'] && password.touched" class="error">Password min length is
+        {{password.errors?.['minlength'].requiredLength}} but current is
+        {{password.errors?.['minlength'].actualLength}}.</span>
+    </div>
+
+    <app-button [buttonText]="loginButtonContext" [disabled]="!loginForm.valid">
+    </app-button>
+  </form>
+
+  <div class="note">If you don't have an account you may
+    <ng-content></ng-content>
+  </div>
+</div>

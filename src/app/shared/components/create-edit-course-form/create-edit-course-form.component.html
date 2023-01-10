@@ -1,0 +1,61 @@
+<form [formGroup]="form">
+
+  <div class="field">
+    <h3>Main Info</h3>
+    <span class="label">Title</span>
+    <input name="title" placeholder="Select title" formControlName="title"
+      (blur)="addErrorStyle(title.errors, title.touched!, $event.target)">
+    <span *ngIf="title.errors?.['required'] && title.touched" class="error">Title is required.</span>
+    <span *ngIf="title.errors?.['minlength'] && title.touched" class="error">Title min length is
+      {{title.errors?.['minlength'].requiredLength}} but current is
+      {{title.errors?.['minlength'].actualLength}}.</span>
+  </div>
+
+  <div class="field">
+    <span class="label">Description</span>
+    <textarea type="text" name="description" placeholder="Select description" formControlName="description"
+      (blur)="addErrorStyle(description.errors, description.touched!, $event.target)">
+    </textarea>
+    <span *ngIf="description.errors?.['required'] && description.touched" class="error">Description is required.</span>
+    <span *ngIf="description.errors?.['minlength'] && description.touched" class="error">Description min length is
+      {{description.errors?.['minlength'].requiredLength}} but current is
+      {{description.errors?.['minlength'].actualLength}}.</span>
+  </div>
+
+  <div class="field authors">
+    <h3>Author</h3>
+    <span class="label">Author Name</span>
+    <div class="row-field">
+      <input type="text" name="title" placeholder="Select author" #author>
+      <app-button [buttonText]="createAuthorBtnText" (click)="addAuthor(author)"></app-button>
+    </div>
+    <div class="field" *ngIf="authors.controls.length > 0">
+      <span class="label">Authors List</span>
+      <div class="authors-list">
+        <ng-container *ngFor="let author of authors.controls; let i = index">
+          <span>{{ author.value.author }}</span>
+          <fa-icon [icon]="xMarkBtn" (click)="deleteAuthor(i)"></fa-icon>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+
+  <div class="field">
+    <h3>Duration</h3>
+    <span class="label">Duration</span>
+    <div class="row-field">
+      <input type="text" name="title" placeholder="Select duration" formControlName="duration"
+        (blur)="addErrorStyle(duration.errors, duration.touched!, $event.target)">
+      <p><strong>{{ duration.value | minutesToHours }}</strong></p>
+    </div>
+    <span *ngIf="duration.errors?.['required'] && duration.touched" class="error">Duration is required.</span>
+    <span *ngIf="duration.errors?.['pattern'] && duration.touched" class="error">The value can be numeric only and min
+      0.</span>
+
+  </div>
+
+  <div (click)="onSubmit($event)">
+    <ng-content select=".create-cancel-buttons"></ng-content>
+  </div>
+
+</form>

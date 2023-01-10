@@ -1,1 +1,51 @@
-<p>registration works!</p>
+<h2>Registration</h2>
+<div class="container">
+
+  <form [formGroup]="form">
+
+    <span>Name</span>
+    <div class="field">
+      <input type="text" placeholder="Select name" formControlName="name"
+        (blur)="addErrorStyle(name.errors, name.touched!, $event.target)">
+      <div class=" icon user-icon">
+        <fa-icon [icon]="faUser"></fa-icon>
+      </div>
+      <span *ngIf="name.errors?.['required'] && name.touched" class="error">Name is required.</span>
+      <span *ngIf="name.errors?.['minlength'] && name.touched" class="error">Name min length is
+        {{name.errors?.['minlength'].requiredLength}} but current is
+        {{name.errors?.['minlength'].actualLength}}.</span>
+    </div>
+
+    <span>Email</span>
+    <div class="field">
+      <input placeholder="Select email" emailValidator formControlName="email">
+      <div class="icon envelop">
+        <fa-icon [icon]="faEnvelope"></fa-icon>
+      </div>
+      <span *ngIf="email.errors?.['required'] && email.touched" class="error">Email is required.</span>
+      <span *ngIf="email.errors?.['emailInvalid']" class="error">Your email should have <b>"test@test.test"</b>
+        structure.</span>
+    </div>
+
+    <span>Password</span>
+    <div class="field">
+      <input type="password" placeholder="Select password" #passwordField formControlName="password">
+      <div class="icon eye-slash">
+        <fa-icon [icon]="faEyeSlash" (click)="switchFieldTypeAndIcon(passwordField)"></fa-icon>
+      </div>
+      <span *ngIf="password.errors?.['required'] && password.touched" class="error">Password is required.</span>
+      <span *ngIf="password.errors?.['minlength'] && password.touched" class="error">Password min length is
+        {{password.errors?.['minlength'].requiredLength}} but current is
+        {{password.errors?.['minlength'].actualLength}}.</span>
+    </div>
+
+    <app-button [buttonText]="registerButtonContext" [disabled]="!form.valid"
+      (click)="registation($event)"></app-button>
+
+  </form>
+
+  <div class="note">If you have an account you may
+    <ng-content></ng-content>
+  </div>
+
+</div>

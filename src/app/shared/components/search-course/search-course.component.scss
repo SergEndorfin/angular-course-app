@@ -1,16 +1,6 @@
 .input-search {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: baseline;
-}
-
-input {
-  margin-right: 20px;
-  border-radius: 4px;
-  font-size: 16px;
-  padding-left: 16px;
-  padding-top: 15px;
-  padding-bottom: 15px;
-  border: 1px solid #CFCFCF;
-  flex-grow: 1;
+  margin-bottom: 30px;
 }

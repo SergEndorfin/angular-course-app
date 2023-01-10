@@ -2,22 +2,41 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { MinutesToHoursPipe } from './pipes/minutes-to-hours.pipe';
-import { COMPONENTS } from './components';
-
+import { ButtonComponent, ConfirmWindowComponent, HeaderComponent, InfoComponent, SearchCourseComponent, CreateEditCourseComponent, CreateEditCourseFormComponent } from './components'
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { EmailValidatorDirective } from './directives/email-validator.directive';
 
 @NgModule({
   declarations: [
-    COMPONENTS,
-    MinutesToHoursPipe
+    ButtonComponent,
+    ConfirmWindowComponent,
+    HeaderComponent,
+    InfoComponent,
+    SearchCourseComponent,
+    CreateEditCourseComponent,
+    CreateEditCourseFormComponent,
+    MinutesToHoursPipe,
+    EmailValidatorDirective
   ],
   imports: [
     CommonModule,
-    FontAwesomeModule
+    FontAwesomeModule,
+    FormsModule,
+    ReactiveFormsModule
   ],
   exports: [
     CommonModule,
-    COMPONENTS,
-    MinutesToHoursPipe
+    ButtonComponent,
+    ConfirmWindowComponent,
+    HeaderComponent,
+    InfoComponent,
+    SearchCourseComponent,
+    CreateEditCourseComponent,
+    CreateEditCourseFormComponent,
+    MinutesToHoursPipe,
+    FormsModule,
+    ReactiveFormsModule,
+    EmailValidatorDirective
   ]
 })
 export class SharedModule { }

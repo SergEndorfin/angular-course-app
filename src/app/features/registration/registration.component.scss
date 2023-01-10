@@ -1,0 +1,102 @@
+h2 {
+  text-align: center;
+  font-weight: 700;
+  font-size: 32px;
+  line-height: 40px;
+  margin-bottom: 36px;
+  margin-top: 50px;;
+}
+
+.container {
+  box-sizing: border-box;
+  margin: 0 auto;
+  padding: 60px 150px;
+  text-align: left;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 20px;
+  margin-bottom: 20px;
+  display: flex;
+
+  flex-wrap: wrap;
+  width: 585px;
+  background: #FFFFFF;
+  border: 1px solid #CFCFCF;
+  border-radius: 4px;
+}
+
+form{
+  width: 100%;
+}
+
+span {
+  margin-top: 10px;
+}
+
+input {
+  margin-right: 0;
+  padding-right: 45px;
+}
+
+app-button {
+  margin-top: 50px;
+  display: flex;
+}
+
+app-button ::ng-deep button {
+  flex: 1;
+}
+
+ .field {
+  display: flex;
+  position: relative;
+  margin-bottom: 30px;
+  margin-left: auto;
+  margin-right: auto;
+  flex: 1;
+  flex-wrap: wrap;
+}
+
+.icon {
+  position: absolute;
+  top: 15px;
+  right: 5px;
+  display: inline-block;
+}
+
+.user-icon, .envelop {
+  right: 16px;
+}
+
+.eye-slash {
+  transform: scaleX(-1);
+  right: 12px;
+}
+
+.note {
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 20px;
+  text-align: center;
+  color: #333E48;
+  margin-top: 35px;
+  
+}
+
+::ng-deep a {
+  text-decoration: none;
+  color: #333E48;
+}
+
+::ng-deep a:hover {
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.error {
+  margin-top: 0px;
+  color: red;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 20px;
+}

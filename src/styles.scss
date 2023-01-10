@@ -9,3 +9,21 @@ body {
   font-size: 16px;
   line-height: 20px;
 }
+
+input, textarea {
+  box-sizing: border-box;
+
+  margin-right: 20px;
+  border-radius: 4px;
+  
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+
+  padding-left: 16px;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  border: 1px solid #CFCFCF;
+  flex-grow: 1;
+}
