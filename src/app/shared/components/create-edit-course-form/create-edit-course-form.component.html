@@ -27,7 +27,7 @@
     <span class="label">Author Name</span>
     <div class="row-field">
       <input type="text" name="title" placeholder="Select author" #author>
-      <app-button [buttonText]="createAuthorBtnText" (click)="addAuthor(author)"></app-button>
+      <app-button [buttonText]="'CREATE AUTHOR'" (click)="addAuthor(author)"></app-button>
     </div>
     <div class="field" *ngIf="authors.controls.length > 0">
       <span class="label">Authors List</span>
@@ -51,11 +51,10 @@
     <span *ngIf="duration.errors?.['required'] && duration.touched" class="error">Duration is required.</span>
     <span *ngIf="duration.errors?.['pattern'] && duration.touched" class="error">The value can be numeric only and min
       0.</span>
-
   </div>
 
-  <div (click)="onCreateCourseClicked($event)">
-    <ng-content select=".create-cancel-buttons"></ng-content>
+  <div>
+    <ng-content select=".cancel-create-buttons"></ng-content>
   </div>
 
 </form>

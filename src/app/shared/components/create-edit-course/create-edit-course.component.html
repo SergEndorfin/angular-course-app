@@ -3,10 +3,10 @@
   <div class="form">
     <app-create-edit-course-form>
 
-      <div class="create-cancel-buttons">
-        <app-button [buttonText]="cancelBtnText" (click)="addCourseCancelClicked($event)"></app-button>
-        <app-button [buttonText]="createCourseBtnText" (click)="createCourseClicked($event)"
-          [disabled]="isFormInvalid"></app-button>
+      <div class="cancel-create-buttons">
+        <app-button [buttonText]="'CANCEL'" (click)="addCourseCancelClicked($event)"></app-button>
+        <app-button [buttonText]="'CREATE COURSE'" (click)="createCourseClicked($event)"
+          [disabled]="!!(isCreateCourseButtonActive$ | async)"></app-button>
       </div>
 
     </app-create-edit-course-form>

@@ -1,7 +1,6 @@
-import { Component, ViewChild, Input } from '@angular/core';
+import { Component, ViewChild, AfterViewInit, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Course } from '../../model/course';
-import { ButtonContent } from '../../utils/button-icon-name';
+import { BehaviorSubject, map, Observable } from 'rxjs';
 import { formToCourse } from '../../utils/converter';
 import { CreateEditCourseFormComponent } from '../create-edit-course-form/create-edit-course-form.component';
 
@@ -10,35 +9,42 @@ import { CreateEditCourseFormComponent } from '../create-edit-course-form/create
   templateUrl: './create-edit-course.component.html',
   styleUrls: ['./create-edit-course.component.scss']
 })
-export class CreateEditCourseComponent {
-
-  // Buttons
-  cancelBtnText = ButtonContent.CANCEL;
-  createCourseBtnText = ButtonContent.CREATE_COURSE;
-
-  @Input()
-  course?: Course;
-  courseId?: number;
+export class CreateEditCourseComponent implements OnInit, AfterViewInit {
 
   @ViewChild(CreateEditCourseFormComponent)
   createEditCourseForm!: CreateEditCourseFormComponent;
-  isFormInvalid = true;
+
+  private isCreateCourseButtonActive$$: BehaviorSubject<boolean>;
+  isCreateCourseButtonActive$: Observable<boolean>;
 
   constructor(private router: Router) { }
+
+  ngOnInit(): void {
+    console.log('>>>', this.router.url);
+    this.isCreateCourseButtonActive$$ = new BehaviorSubject(this.router.url.includes('add') ? true : false);
+    this.isCreateCourseButtonActive$ = this.isCreateCourseButtonActive$$.asObservable();
+  }
+
+  ngAfterViewInit(): void {
+    this.createEditCourseForm.form.statusChanges
+      .pipe(
+        map(status => status === 'INVALID' ? true : false)
+      )
+      .subscribe(isValid => this.isCreateCourseButtonActive$$.next(isValid));
+  }
 
   addCourseCancelClicked(event: any) {
     event.preventDefault();
     this.router.navigate(['..']);
   }
 
-
-
   createCourseClicked(event: any) {
+    console.log('===================');
     event.preventDefault();
     const course = formToCourse(this.createEditCourseForm.form);
+    console.log(course);
     // course.id = this.courseId;
     // this.courseService.createCourse(course);
-    this.courseId = undefined;
     // this.buttonClickedEvent.emit(this.cancelBtnText);
   }
 
