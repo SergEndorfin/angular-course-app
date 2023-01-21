@@ -1,7 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Course } from 'src/app/shared/model/course';
 import { ButtonContent } from 'src/app/shared/utils/button-icon-name';
-import { first, Observable, tap } from 'rxjs';
+import { first, map, Observable } from 'rxjs';
 import { CoursesStoreService } from 'src/app/services/courses/courses-store.service';
 import { UserStoreService } from 'src/app/user/user-store.service';
 
@@ -38,6 +38,13 @@ export class CoursesComponent implements OnInit {
     this.isAdmin$ = this.userStoreService.isAdmin$;
   }
 
+  searchResult(courseTitle: string) {
+    this.courses$ = this.coursesStoreService.courses$.pipe(
+      map(courses => courses.filter(course => course.title.includes(courseTitle)))
+    )
+  }
+
+
 
   ///////////////////////////
   ///////////////////////////
@@ -54,9 +61,4 @@ export class CoursesComponent implements OnInit {
     }
     this.title = undefined;
   }
-
-  searchResult(coursesFound: Course[]) {
-    // this.courses = coursesFound;
-  }
-
 }

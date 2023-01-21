@@ -1,6 +1,4 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { Course } from '../../model/course';
-import { CoursesService } from 'src/app/services/courses/courses.service';
 
 @Component({
   selector: 'app-search-course',
@@ -10,11 +8,11 @@ import { CoursesService } from 'src/app/services/courses/courses.service';
 export class SearchCourseComponent {
 
   @Output()
-  searchCourseEvent = new EventEmitter<Course[]>();
+  searchCourseEvent = new EventEmitter<string>();
 
-  constructor(private courseService: CoursesService) { }
+  constructor() { }
 
   onSearchClicked(title: string) {
-    // this.searchCourseEvent.emit(this.courseService.getAllCoursesByTitle(title));
+    this.searchCourseEvent.emit(title);
   }
 }
