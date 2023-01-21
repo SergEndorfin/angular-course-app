@@ -4,7 +4,7 @@
     <app-create-edit-course-form>
 
       <div class="create-cancel-buttons">
-        <app-button [buttonText]="cancelBtnText" (click)="cancelCourseClicked($event)"></app-button>
+        <app-button [buttonText]="cancelBtnText" (click)="addCourseCancelClicked($event)"></app-button>
         <app-button [buttonText]="createCourseBtnText" (click)="createCourseClicked($event)"
           [disabled]="isFormInvalid"></app-button>
       </div>

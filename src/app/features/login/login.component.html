@@ -18,7 +18,7 @@
     <span>Password</span>
     <div class="field">
       <input name="password" type="password" placeholder="Select Password" #passwordField ngModel #password="ngModel"
-        required minlength="5" maxlength="10" (blur)="addErrorStyle(password.errors, password.touched!, $event.target)">
+        required minlength="5" (blur)="addErrorStyle(password.errors, password.touched!, $event.target)">
       <div class="icon eye-slash">
         <fa-icon [icon]="faEyeSlash" (click)="switchFieldTypeAndIcon(passwordField)"></fa-icon>
       </div>
@@ -28,11 +28,14 @@
         {{password.errors?.['minlength'].actualLength}}.</span>
     </div>
 
-    <app-button [buttonText]="loginButtonContext" [disabled]="!loginForm.valid">
+    <app-button [buttonText]="'LOGIN'" [disabled]="!loginForm.valid">
     </app-button>
+
+    <span *ngIf="isCredentialsInvalid$ | async" class="error"> User not found. Check your credentials, please.</span>
+
   </form>
 
   <div class="note">If you don't have an account you may
-    <ng-content></ng-content>
+    <strong><a routerLink="/registration">Registration</a></strong>
   </div>
 </div>

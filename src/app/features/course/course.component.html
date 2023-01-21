@@ -1,16 +1,7 @@
-<div class="couse-card" *ngIf="course">
-  <h3>{{course.title}}</h3>
-  <section>
-    <div class="content">
-      <p>{{ course.description }}</p>
-    </div>
-    <div class="description">
-      <p>
-        <b>Authors: </b>{{ course.authors.join(', ') }}<br>
-        <b>Duration: </b>{{ course.duration | minutesToHours }}<br>
-        <b>Created: </b>{{ course.creationDate | date: 'dd.MM.yyyy' }}
-      </p>
-      <ng-content select=".buttons"></ng-content>
-    </div>
-  </section>
+<div class="course" *ngIf="course$ | async as course">
+  <h2>{{ course.title }}</h2>
+  <p><b>Description:</b><br><br> {{ course.description }}</p>
+  <p><b>Creation Date:</b> {{ course.creationDate | date: 'dd.MM.yyyy' }}</p>
+  <p><b>Duration:</b> {{ course.duration | minutesToHours }}</p>
+  <p><b>Authors:</b> {{ getAuthorsForCurrentCourse(course) | async }}</p>
 </div>

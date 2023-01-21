@@ -5,6 +5,7 @@ import { MinutesToHoursPipe } from './pipes/minutes-to-hours.pipe';
 import { ButtonComponent, ConfirmWindowComponent, HeaderComponent, InfoComponent, SearchCourseComponent, CreateEditCourseComponent, CreateEditCourseFormComponent } from './components'
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { EmailValidatorDirective } from './directives/email-validator.directive';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { EmailValidatorDirective } from './directives/email-validator.directive'
     CommonModule,
     FontAwesomeModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    HttpClientModule
   ],
   exports: [
     CommonModule,

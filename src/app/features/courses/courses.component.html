@@ -1,31 +1,34 @@
 <div class="container">
 
-  <ng-container *ngIf="courses.length > 0; else info">
-
+  <ng-container *ngIf="(courses$ | async) as courses; else info">
     <app-search-course (searchCourseEvent)="searchResult($event)"></app-search-course>
 
-    <ng-container *ngFor="let course of courses; index as i">
-      <app-course [course]="course">
+    <ng-container *ngFor="let course of courses">
+      <app-course-card [course]="course">
 
         <div class="buttons">
-          <app-button [buttonText]="showCoursesText"></app-button>
-          <ng-container *ngIf="editable">
-            <app-button [buttonIconName]="trashIcon" (click)="deleteCourse(course.title, i)"></app-button>
-            <app-button [buttonIconName]="pencilIcon" (click)="editCourse(course, i)"></app-button>
+          <app-button [buttonText]="showCoursesText" [routerLink]="[course.id]"></app-button>
+          <ng-container *ngIf="isAdmin$ | async">
+            <app-button [buttonIconName]="trashIcon" (click)="deleteCourse(course.title, course.id)"></app-button>
+            <app-button [buttonIconName]="pencilIcon" [routerLink]="['edit', course.id]"></app-button>
           </ng-container>
         </div>
-      </app-course>
+      </app-course-card>
     </ng-container>
-
   </ng-container>
 
 
-  <ng-template #info>
-    <ng-content></ng-content>
-  </ng-template>
+  <div class="add-course-btn" *ngIf="isAdmin$ | async">
+    <app-button [buttonText]="addNewCourseButtonText" [disabled]="!true" routerLink="add"></app-button>
+  </div>
 
-  <ng-content select=".add-course-btn"></ng-content>
 </div>
+
+
+<ng-template #info>
+  <app-info></app-info>
+</ng-template>
+
 
 <ng-container *ngIf="title">
   <app-confirm-window (confirmWindowButtonClicked)="onConfirmWindowClicked($event)" [title]="title"

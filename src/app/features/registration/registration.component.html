@@ -25,6 +25,7 @@
       <span *ngIf="email.errors?.['required'] && email.touched" class="error">Email is required.</span>
       <span *ngIf="email.errors?.['emailInvalid']" class="error">Your email should have <b>"test@test.test"</b>
         structure.</span>
+      <span *ngIf="doesUserExist$ | async" class="error">User with current email exists. Try another one.</span>
     </div>
 
     <span>Password</span>
@@ -39,13 +40,16 @@
         {{password.errors?.['minlength'].actualLength}}.</span>
     </div>
 
-    <app-button [buttonText]="registerButtonContext" [disabled]="!form.valid"
-      (click)="registation($event)"></app-button>
+    <app-button [buttonText]="'REGISTRATION'" [disabled]="!form.valid" (click)="registation()"></app-button>
 
   </form>
 
-  <div class="note">If you have an account you may
-    <ng-content></ng-content>
+  <div class="note">
+    <ng-container *ngIf="!(isNewUserCreated$ | async)">If you have an account you may </ng-container>
+    <ng-container *ngIf="isNewUserCreated$ | async as result"><span class="created">{{ result }} Now you may
+      </span>
+    </ng-container>
+    <strong><a routerLink="/login">Login</a></strong>
   </div>
 
 </div>

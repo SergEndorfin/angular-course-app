@@ -1,12 +1,12 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { faEyeSlash, faUser, faEnvelope } from '@fortawesome/free-regular-svg-icons';
-import { UserService } from 'src/app/shared/services/user.service';
-import { ButtonContent } from 'src/app/shared/utils/button-icon-name';
+import { map, Observable, of, tap } from 'rxjs';
+import { AuthService } from 'src/app/auth/services/auth.service';
 import { switchBorder } from 'src/app/shared/utils/element-border-switcher';
 import { createEmailValidator } from 'src/app/shared/utils/email.validator';
 import { switchFieldTypeAndIcon } from 'src/app/shared/utils/password-field-switcher';
-import { User } from 'src/app/shared/model/user';
 
 @Component({
   selector: 'app-registration',
@@ -15,25 +15,28 @@ import { User } from 'src/app/shared/model/user';
 })
 export class RegistrationComponent {
 
-  @Output() registrationEvent = new EventEmitter();
-
-  registerButtonContext = ButtonContent.REGISTRATION;
-
   faUser = faUser;
   faEyeSlash = faEyeSlash;
   faEnvelope = faEnvelope;
 
+  isNewUserCreated$: Observable<string>;
+  doesUserExist$: Observable<boolean>;
+
   form = this.fb.group({
-    name: ['', [Validators.required, Validators.minLength(6)]],
+    name: ['', [Validators.required, Validators.minLength(3)]],
     email: ['', {
       validators: [Validators.required, createEmailValidator()],
       updateOn: 'blur'
     }
     ],
-    password: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(10)]]
+    password: ['', [Validators.required, Validators.minLength(6)]]
   });
 
-  constructor(private fb: FormBuilder, private userService: UserService) { }
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+    private authService: AuthService
+  ) { }
 
   get name() {
     return this.form.controls['name'];
@@ -55,9 +58,19 @@ export class RegistrationComponent {
     switchBorder(errors, isTouched, element);
   }
 
-  registation(event: Event) {
-    event.preventDefault();
-    this.userService.registration(<User>this.form.value);
-    this.registrationEvent.emit(true);
+  registation() {
+    this.authService.register(this.form.value)
+      .subscribe({
+        next: responce => {
+          this.isNewUserCreated$ = of(responce.result);
+          this.doesUserExist$ = of(false);
+          this.form.reset();
+        },
+        error: () => this.doesUserExist$ = of(true)
+      });
+  }
+
+  clearFormFields() {
+
   }
 }

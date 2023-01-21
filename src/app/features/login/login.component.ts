@@ -1,10 +1,11 @@
-import { Component, EventEmitter, Output } from '@angular/core';
-import { faEye, faEyeSlash, faUser, faEnvelope } from '@fortawesome/free-regular-svg-icons';
-import { User } from 'src/app/shared/model/user';
-import { UserService } from 'src/app/shared/services/user.service';
-import { ButtonContent } from 'src/app/shared/utils/button-icon-name';
+import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+import { faEyeSlash, faEnvelope } from '@fortawesome/free-regular-svg-icons';
+import { Observable, of } from 'rxjs';
+import { AuthService } from 'src/app/auth/services/auth.service';
 import { switchBorder } from 'src/app/shared/utils/element-border-switcher';
 import { switchFieldTypeAndIcon } from 'src/app/shared/utils/password-field-switcher';
+import { UserStoreService } from 'src/app/user/user-store.service';
 
 @Component({
   selector: 'app-login',
@@ -15,26 +16,35 @@ import { switchFieldTypeAndIcon } from 'src/app/shared/utils/password-field-swit
 })
 export class LoginComponent {
 
-  loginButtonContext = ButtonContent.LOGIN;
-
-  faUser = faUser;
-  faEye = faEye;
+  // Buttons:
   faEyeSlash = faEyeSlash;
   faEnvelope = faEnvelope;
 
-  @Output()
-  loginEvent = new EventEmitter<User>();
+  isCredentialsInvalid$: Observable<boolean>;
 
-  constructor(private userServise: UserService) { }
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private userStoreService: UserStoreService
+  ) { }
 
   switchFieldTypeAndIcon(passwordField: HTMLInputElement) {
     this.faEyeSlash = switchFieldTypeAndIcon(passwordField, this.faEyeSlash);
   }
 
   login(email: string, password: string) {
-    this.loginEvent.emit(
-      this.userServise.login({ email, password, name: '' })
-    );
+    this.authService.login(email, password)
+      .subscribe({
+        next: () => {
+          this.userStoreService.init();
+          this.router.navigateByUrl('/courses');
+        },
+        error: () => this.isCredentialsInvalid$ = of(true)
+      });
+  }
+
+  isCredentialsInvalid(isValid = false) {
+    return isValid;
   }
 
   addErrorStyle(errors: any, isTouched: boolean, element: any) {
