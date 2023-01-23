@@ -20,7 +20,6 @@ export class CreateEditCourseComponent implements OnInit, AfterViewInit {
   constructor(private router: Router) { }
 
   ngOnInit(): void {
-    console.log('>>>', this.router.url);
     this.isCreateCourseButtonActive$$ = new BehaviorSubject(this.router.url.includes('add') ? true : false);
     this.isCreateCourseButtonActive$ = this.isCreateCourseButtonActive$$.asObservable();
   }

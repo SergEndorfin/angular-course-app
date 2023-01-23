@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Course } from 'src/app/shared/model/course';
 import { ButtonContent } from 'src/app/shared/utils/button-icon-name';
-import { first, map, Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { CoursesStoreService } from 'src/app/services/courses/courses-store.service';
 import { UserStoreService } from 'src/app/user/user-store.service';
 
@@ -16,10 +16,8 @@ export class CoursesComponent implements OnInit {
   isAdmin$: Observable<boolean>;
 
   // Buttons:
-  showCoursesText = ButtonContent.SHOW_COURSE;
   pencilIcon = ButtonContent.PENCIL;
   trashIcon = ButtonContent.TRASH;
-  addNewCourseButtonText = ButtonContent.ADD_NEW_COURSE;
 
   title?: string;
   courseId?: string;
@@ -31,10 +29,7 @@ export class CoursesComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.courses$ = this.coursesStoreService.courses$
-      .pipe(
-        first()
-      );
+    this.courses$ = this.coursesStoreService.courses$;
     this.isAdmin$ = this.userStoreService.isAdmin$;
   }
 
@@ -44,19 +39,14 @@ export class CoursesComponent implements OnInit {
     )
   }
 
-
-
-  ///////////////////////////
-  ///////////////////////////
   deleteCourse(title: string, courseId: string) {
-    console.log('deleteCourse clicked -> course id =', courseId);
     this.title = title;
     this.courseId = courseId;
   }
 
-  onConfirmWindowClicked(buttonValue: string) {
+  onConfirmWindowClicked(buttonValue: string): void {
     if (buttonValue === ButtonContent.OK) {
-      // this.coursesService.deleteById(this.courseId);
+      this.coursesStoreService.deleteCourseById(this.courseId!);
       this.courseId = undefined;
     }
     this.title = undefined;

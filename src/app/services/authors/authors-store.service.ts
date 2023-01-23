@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, map, Observable, Subscriber } from 'rxjs';
+import { BehaviorSubject, concatMap, map, Observable, of, reduce } from 'rxjs';
 import { Author } from 'src/app/shared/model/author';
 import { AuthorsService } from './authors.service';
 
@@ -23,5 +23,22 @@ export class AuthorsStoreService {
     return this.authors$.pipe(
       map(authors => authors.filter(author => authorIds.includes(author.id)))
     );
+  }
+
+  deleteAuthorsByIds(ids: string[]): Observable<any> {
+    return of(...ids)
+      .pipe(
+        concatMap(authorId => this.authorsService.deleteAuthorById(authorId)),
+        reduce((acc, responce) => {
+          acc.push(responce);
+          return acc;
+        }, new Array())
+      )
+  }
+
+  updateAuthorsStore(authorsIds: string[]) {
+    const authors = this.authors$$.getValue();
+    const updatedAuthorsList = authors.filter(author => !authorsIds.includes(author.id));
+    this.authors$$.next(updatedAuthorsList);
   }
 }

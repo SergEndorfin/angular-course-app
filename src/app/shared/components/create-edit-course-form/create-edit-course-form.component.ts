@@ -95,29 +95,4 @@ export class CreateEditCourseFormComponent implements OnInit, OnDestroy {
   deleteAuthor(authorIndex: number) {
     this.authors.removeAt(authorIndex);
   }
-
-  // onCreateCourseClicked(event: any) {
-  //   console.log('>>>>>>>>>>', event);
-  //   console.log('>>>>>>>>>>', this.form.value);
-  //   const buttonElement = event.target;
-  //   const valueContent = (buttonElement.textContent || buttonElement.innerText).trim();
-  //   if (valueContent === ButtonContent.CREATE_COURSE) {
-  //     // this.courseService.createCourse(formToCourse(this.form));
-  //   }
-  //   console.log('>>>>>>>>>>', valueContent);
-  //   // {
-  //   //   "successful": true,
-  //   //   "result": {
-  //   //     "title": "tttttttttt",
-  //   //     "description": "dddddddddddd",
-  //   //     "duration": 150,
-  //   //     "authors": [
-  //   //       "3e9f640f-8f7e-47c3-bd1f-facf1c13f52c",
-  //   //       "1fccd9fc-248d-407d-b488-88e75a30304e"
-  //   //     ],
-  //   //     "creationDate": "19/01/2023",
-  //   //     "id": "f6cfc7dd-8a70-444b-a2d0-0055e243b13c"
-  //   //   }
-  //   // }
-  // }
 }
