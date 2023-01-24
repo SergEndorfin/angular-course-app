@@ -13,7 +13,7 @@ export class CoursesService {
   }
 
   getEmpty(): Course {
-    return { id: 'mock-course', title: '', authors: [], description: '', duration: 0, creationDate: new Date() }
+    return { id: 'mock-course', title: '', authors: [], description: '', duration: 0, creationDate: '' }
   }
 
   getAllCourses(): Observable<Course[]> {
@@ -24,6 +24,39 @@ export class CoursesService {
   }
 
   deleteCourseById(id: string): Observable<any> {
-    return this.httpClient.delete(`http://localhost:4000/courses/${id}`, { headers: this.sessionStorage.headers });
+    return this.httpClient
+      .delete(`http://localhost:4000/courses/${id}`, { headers: this.sessionStorage.headers });
+  }
+
+  createCourse(course: Course): Observable<any> {
+
+    console.log('> createCourse(course: Course) <', course);
+
+    return this.httpClient
+      .post<any>('http://localhost:4000/courses/add', course, { headers: this.sessionStorage.headers })
+      .pipe(
+        map(res => res['result'])
+      );
+    // {
+    //   "successful": true,
+    //   "result": {
+    //     "title": "string",
+    //     "description": "strin   gdcscsc",
+    //     "duration": 10,
+    //     "authors": [
+    //       "111"
+    //     ],
+    //     "creationDate": "23/01/2023",
+    //     "id": "d8794431-7df4-4d78-8eff-8c38ee188f9c"
+    //   }
+    // }
+  }
+
+  updateCourse(course: Course): Observable<any> {
+    return this.httpClient
+      .put<any>(`http://localhost:4000/courses/${course.id}`, course, { headers: this.sessionStorage.headers })
+      .pipe(
+        map(res => res['result'])
+      );;
   }
 }

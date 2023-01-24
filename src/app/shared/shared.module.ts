@@ -6,6 +6,7 @@ import { ButtonComponent, ConfirmWindowComponent, HeaderComponent, InfoComponent
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { EmailValidatorDirective } from './directives/email-validator.directive';
 import { HttpClientModule } from '@angular/common/http';
+import { ProperDatePipe } from './pipes/proper-date.pipe';
 
 @NgModule({
   declarations: [
@@ -17,7 +18,8 @@ import { HttpClientModule } from '@angular/common/http';
     CreateEditCourseComponent,
     CreateEditCourseFormComponent,
     MinutesToHoursPipe,
-    EmailValidatorDirective
+    EmailValidatorDirective,
+    ProperDatePipe
   ],
   imports: [
     CommonModule,
@@ -36,6 +38,7 @@ import { HttpClientModule } from '@angular/common/http';
     CreateEditCourseComponent,
     CreateEditCourseFormComponent,
     MinutesToHoursPipe,
+    ProperDatePipe,
     FormsModule,
     ReactiveFormsModule,
     EmailValidatorDirective

@@ -18,13 +18,16 @@ export class AuthorsService {
       );
   }
 
-  // TODO
-  addAuthor() {
-
-  }
-
   deleteAuthorById(id: string): Observable<any> {
     return this.httpClient.delete(`http://localhost:4000/authors/${id}`, { headers: this.sessionStorage.headers });
+  }
+
+  addAuthor(author: Author): Observable<any> {
+    return this.httpClient
+      .post<any>('http://localhost:4000/authors/add', { name: author['name'] }, { headers: this.sessionStorage.headers })
+      .pipe(
+        map(res => res['result'])
+      );
   }
 }
 

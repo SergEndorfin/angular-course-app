@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, concatMap, map, Observable, of, reduce } from 'rxjs';
+import { BehaviorSubject, concatMap, from, map, mergeAll, mergeMap, Observable, of, reduce, tap } from 'rxjs';
 import { Author } from 'src/app/shared/model/author';
 import { AuthorsService } from './authors.service';
 
@@ -19,7 +19,7 @@ export class AuthorsStoreService {
       .subscribe(authors => this.authors$$.next(authors))
   }
 
-  selectAuthorNamesByIds(authorIds: string[]): Observable<Author[]> {
+  selectAuthorsByIds(authorIds: string[]): Observable<Author[]> {
     return this.authors$.pipe(
       map(authors => authors.filter(author => authorIds.includes(author.id)))
     );
@@ -36,9 +36,24 @@ export class AuthorsStoreService {
       )
   }
 
-  updateAuthorsStore(authorsIds: string[]) {
+  deleteAuthorsFromStore(authorsIds: string[]) {
     const authors = this.authors$$.getValue();
     const updatedAuthorsList = authors.filter(author => !authorsIds.includes(author.id));
     this.authors$$.next(updatedAuthorsList);
+  }
+
+
+
+
+  createAuthors(authors: Author[]): Observable<any> {
+    return from(authors).pipe(
+      concatMap(author => this.authorsService.addAuthor(author)),
+      reduce((acc, responce) => {
+        acc.push(responce);
+        return acc;
+      }, new Array()),
+      // update authors local store
+      tap(responces => this.authors$$.next([...this.authors$$.getValue(), ...responces]))
+    )
   }
 }

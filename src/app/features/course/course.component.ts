@@ -29,7 +29,7 @@ export class CourseComponent implements OnInit {
   }
 
   getAuthorsForCurrentCourse(course: Course): Observable<string> {
-    return this.authorStoreService.selectAuthorNamesByIds(course.authors)
+    return this.authorStoreService.selectAuthorsByIds(course.authors)
       .pipe(
         map(author => author.map(author => author.name).join(', '))
       );

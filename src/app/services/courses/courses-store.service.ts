@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, concatMap, filter, first, map, Observable } from 'rxjs';
+import { BehaviorSubject, concatMap, filter, first, map, Observable, pipe, tap } from 'rxjs';
+import { Author } from 'src/app/shared/model/author';
 import { Course } from '../../shared/model/course';
 import { AuthorsStoreService } from '../authors/authors-store.service';
 import { CoursesService } from './courses.service';
@@ -40,15 +41,36 @@ export class CoursesStoreService {
         map(deleteAuthorsResponces => deleteAuthorsResponces.map((resp: any) => this.getIdFromResponce(resp)))
       )
       .subscribe(authorIds => {
-        this.updateCoursesStore(id);
-        this.authorsStoreService.updateAuthorsStore(authorIds);
+        this.deleteCourseFromStore(id);
+        this.authorsStoreService.deleteAuthorsFromStore(authorIds);
       });
   }
 
-  updateCoursesStore(courseId: string) {
+  createCourse(course: Course): Observable<any> {
+    // save authors to get Ids
+    return this.authorsStoreService.createAuthors(course.authors)
+      .pipe(
+        map<Author[], string[]>(saveAuthorResponces => saveAuthorResponces.map(resp => resp['id'])),
+        // put ids into course.authors
+        tap(authorsIds => course.authors = authorsIds),
+        concatMap(() => this.coursesService.createCourse(course)),
+
+        tap(createCourseResp => console.log('_=_', createCourseResp))
+      );
+  }
+
+  updateCourse(course: Course) {
+    return this.coursesService.updateCourse(course);
+  }
+
+  deleteCourseFromStore(courseId: string) {
     const courses = this.courses$$.getValue();
     const updatedCoursesList = courses.filter(course => course.id !== courseId);
     this.courses$$.next(updatedCoursesList);
+  }
+
+  createCourseInStrore(course: Course) {
+    this.courses$$.next([...this.courses$$.value, course])
   }
 
   getIdFromResponce(responce: any): string {

@@ -18,7 +18,6 @@ import { AppRoutingModule } from './app-routing.module';
     AppRoutingModule
   ],
   providers: [
-    { provide: LOCALE_ID, useValue: "en-GB" },
     { provide: 'Window', useValue: window }
   ],
   bootstrap: [AppComponent],

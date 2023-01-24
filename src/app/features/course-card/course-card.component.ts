@@ -19,7 +19,7 @@ export class CourseCardComponent implements OnInit {
 
   ngOnInit(): void {
     this.authorsNames$ =
-      this.authorsStoreService.selectAuthorNamesByIds(this.course.authors)
+      this.authorsStoreService.selectAuthorsByIds(this.course.authors)
         .pipe(
           map(author => author
             .map(author => author.name)
