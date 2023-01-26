@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, map, pipe, tap } from 'rxjs';
+import { SessionStorageService } from '../auth/services/session-storage.service';
 import { User } from '../shared/model/user';
 import { UserService } from './user.service';
 
@@ -14,7 +15,14 @@ export class UserStoreService {
   name$ = this.name$$.asObservable();
   isAdmin$ = this.isAdmin$$.asObservable();
 
-  constructor(private userService: UserService) { }
+  constructor(private userService: UserService, private sessionStore: SessionStorageService) {
+    const sessionUser = this.sessionStore.getUser();
+    if (sessionUser) {
+      const user = JSON.parse(sessionUser);
+      this.name$$.next('' + user.name);
+      this.isAdmin$$.next(user.role === 'admin');
+    }
+  }
 
   init() {
     this.userService.getUser()
@@ -22,6 +30,7 @@ export class UserStoreService {
         map(user => this.setNameIfEmpty(user))
       )
       .subscribe(user => {
+        this.sessionStore.setUser(user);
         this.name$$.next('' + user.name);
         this.isAdmin$$.next(user.role === 'admin');
       });
@@ -35,5 +44,6 @@ export class UserStoreService {
   logout() {
     this.name$$.next('');
     this.isAdmin$$.next(false);
+    this.sessionStore.deleteToken();
   }
 }

@@ -29,9 +29,8 @@ export class AuthService {
   logout() {
     return this.httpClient.delete<any>("http://localhost:4000/logout", { headers: this.sessionStorage.headers })
       .pipe(
-        tap(() => {
-          this.sessionStorage.deleteToken();
-        })
+        tap(() => this.sessionStorage.deleteToken()),
+        tap(() => this.sessionStorage.deleteUser())
       );
   }
 
