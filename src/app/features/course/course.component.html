@@ -1,7 +1,7 @@
 <div class="course" *ngIf="course$ | async as course">
   <h2>{{ course.title }}</h2>
   <p><b>Description:</b><br><br> {{ course.description }}</p>
-  <p><b>Creation Date:</b> {{ course.creationDate | date: 'dd.MM.yyyy' }}</p>
+  <p><b>Creation Date:</b> {{ course.creationDate | properDate }}</p>
   <p><b>Duration:</b> {{ course.duration | minutesToHours }}</p>
   <p><b>Authors:</b> {{ getAuthorsForCurrentCourse(course) | async }}</p>
 </div>

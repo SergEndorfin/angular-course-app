@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CoursesStoreService } from './services/courses/courses-store.service';
 import { AuthorsStoreService } from './services/authors/authors-store.service';
 import { UserStoreService } from './user/user-store.service';
@@ -20,7 +20,8 @@ export class AppComponent implements OnInit {
     private coursesStore: CoursesStoreService,
     private authorsStoreService: AuthorsStoreService,
     private userStoreService: UserStoreService,
-    private authService: AuthService
+    private authService: AuthService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -40,6 +41,7 @@ export class AppComponent implements OnInit {
         tap(() => this.userStoreService.logout())
       )
       .subscribe();
+    this.router.navigateByUrl('/login');
   }
 
 }

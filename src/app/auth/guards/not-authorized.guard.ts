@@ -11,7 +11,6 @@ export class NotAuthorizedGuard implements CanActivate {
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean | UrlTree> {
     return this.authService.isAuthorized$
       .pipe(
-        tap(isAuthorized => console.log('isAuthorized:', isAuthorized)),
         map(isAuthorized => !isAuthorized ? true : this.router.parseUrl('/courses'))
       )
   }
