@@ -29,5 +29,12 @@ export class AuthorsService {
         map(res => res['result'])
       );
   }
-}
 
+  updateAuthor(author: Author): Observable<any> {
+    return this.httpClient
+      .put<any>(`http://localhost:4000/authors/${author.id}`, { name: author.name }, { headers: this.sessionStorage.headers })
+      .pipe(
+        map(res => res['result'])
+      );
+  }
+}

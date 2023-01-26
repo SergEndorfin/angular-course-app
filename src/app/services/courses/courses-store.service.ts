@@ -47,30 +47,58 @@ export class CoursesStoreService {
   }
 
   createCourse(course: Course): Observable<any> {
-    // save authors to get Ids
     return this.authorsStoreService.createAuthors(course.authors)
       .pipe(
         map<Author[], string[]>(saveAuthorResponces => saveAuthorResponces.map(resp => resp['id'])),
-        // put ids into course.authors
         tap(authorsIds => course.authors = authorsIds),
         concatMap(() => this.coursesService.createCourse(course)),
-
-        tap(createCourseResp => console.log('_=_', createCourseResp))
+        tap(createdCourse => this.createCourseInStrore(createdCourse))
       );
   }
 
-  updateCourse(course: Course) {
-    return this.coursesService.updateCourse(course);
+  updateCourse(course: Course): Observable<any> {
+    const currentCourseAuthors: Author[] = course.authors;
+    const currentCourseAuthorsIds = currentCourseAuthors.map(author => author.id);
+    const currentCourseAuthorsStoreIds: string[] = this.courses$$.getValue().find(c => c.id === course.id)!.authors;
+    const authorIdsToBeDeleted = currentCourseAuthorsStoreIds.filter(authorStoreId =>
+      !currentCourseAuthorsIds.includes(authorStoreId)
+    );
+    const authorsIdsToLeave: string[] = currentCourseAuthors.filter(author => author.id).map(author => author.id);
+    const authorsWithoutIdsToBeCreated: Author[] = currentCourseAuthors.filter(author => !author.id);
+
+    return this.authorsStoreService.deleteAuthorsByIds(authorIdsToBeDeleted)
+      .pipe(
+        map<any[], string[]>(deleteAuthorsResponce => deleteAuthorsResponce.map(resp => resp.result.split(' ')[4])),
+        tap(deletedAuthorsIds => this.authorsStoreService.deleteAuthorsFromStore(deletedAuthorsIds)),
+
+        concatMap(() => this.authorsStoreService.createAuthors(authorsWithoutIdsToBeCreated)),
+        map<Author[], string[]>(createdAuthors => createdAuthors.map(author => author['id'])),
+        tap(createdAuthorIds => course.authors = [...authorsIdsToLeave, ...createdAuthorIds]),
+
+        concatMap(() => this.coursesService.updateCourse(course)),
+        tap(updatedCourse => this.updateCourseInStrore(updatedCourse))
+      );
   }
 
   deleteCourseFromStore(courseId: string) {
-    const courses = this.courses$$.getValue();
+    const courses = this.courses$$.getValue().slice(0);
     const updatedCoursesList = courses.filter(course => course.id !== courseId);
-    this.courses$$.next(updatedCoursesList);
+    this.courses$$.next(updatedCoursesList.slice(0));
   }
 
   createCourseInStrore(course: Course) {
     this.courses$$.next([...this.courses$$.value, course])
+  }
+
+  updateCourseInStrore(course: Course) {
+    const courses = this.courses$$.getValue();
+    const courseIndex = courses.findIndex(c => c.id === course.id);
+    const newCoursesList = courses.slice(0);
+    newCoursesList[courseIndex] = {
+      ...courses[courseIndex],
+      ...course
+    };
+    this.courses$$.next(newCoursesList);
   }
 
   getIdFromResponce(responce: any): string {

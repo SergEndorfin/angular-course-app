@@ -29,27 +29,11 @@ export class CoursesService {
   }
 
   createCourse(course: Course): Observable<any> {
-
-    console.log('> createCourse(course: Course) <', course);
-
     return this.httpClient
       .post<any>('http://localhost:4000/courses/add', course, { headers: this.sessionStorage.headers })
       .pipe(
         map(res => res['result'])
       );
-    // {
-    //   "successful": true,
-    //   "result": {
-    //     "title": "string",
-    //     "description": "strin   gdcscsc",
-    //     "duration": 10,
-    //     "authors": [
-    //       "111"
-    //     ],
-    //     "creationDate": "23/01/2023",
-    //     "id": "d8794431-7df4-4d78-8eff-8c38ee188f9c"
-    //   }
-    // }
   }
 
   updateCourse(course: Course): Observable<any> {

@@ -11,5 +11,4 @@ export class ProperDatePipe implements PipeTransform {
       .map(val => val.padStart(2, '0'))
       .join('.');
   }
-
 }

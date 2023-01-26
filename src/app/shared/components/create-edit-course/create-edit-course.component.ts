@@ -1,6 +1,7 @@
 import { Component, ViewChild, AfterViewInit, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { BehaviorSubject, map, Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, map, Observable } from 'rxjs';
+import { AuthorsStoreService } from 'src/app/services/authors/authors-store.service';
 import { CoursesStoreService } from 'src/app/services/courses/courses-store.service';
 import { formToCourse } from '../../utils/converter';
 import { CreateEditCourseFormComponent } from '../create-edit-course-form/create-edit-course-form.component';
@@ -18,7 +19,7 @@ export class CreateEditCourseComponent implements OnInit, AfterViewInit {
   private isCreateCourseButtonActive$$: BehaviorSubject<boolean>;
   isCreateCourseButtonActive$: Observable<boolean>;
 
-  constructor(private router: Router, private courseStoreService: CoursesStoreService) { }
+  constructor(private router: Router, private courseStoreService: CoursesStoreService, private authorStoreService: AuthorsStoreService) { }
 
   ngOnInit(): void {
     this.isCreateCourseButtonActive$$ = new BehaviorSubject(this.router.url.includes('add') ? true : false);
@@ -42,18 +43,12 @@ export class CreateEditCourseComponent implements OnInit, AfterViewInit {
     event.preventDefault();
     const course = formToCourse(this.createEditCourseForm.form);
 
-    let create$: Observable<any>;
+    let createUpdateCourse$: Observable<any>;
     if (course.id === '') {
-      create$ = this.courseStoreService.createCourse(course);
+      createUpdateCourse$ = this.courseStoreService.createCourse(course);
     } else {
-      create$ = this.courseStoreService.updateCourse(course);
+      createUpdateCourse$ = this.courseStoreService.updateCourse(course);
     }
-
-    create$.subscribe({
-      next: (resp) => {
-        this.courseStoreService.createCourseInStrore(resp);
-        this.router.navigate(['/'])
-      }
-    })
+    createUpdateCourse$.subscribe(() => this.router.navigate(['/']));
   }
 }

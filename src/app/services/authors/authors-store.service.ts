@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, concatMap, from, map, mergeAll, mergeMap, Observable, of, reduce, tap } from 'rxjs';
+import { BehaviorSubject, concatMap, from, map, Observable, of, reduce, tap } from 'rxjs';
 import { Author } from 'src/app/shared/model/author';
 import { AuthorsService } from './authors.service';
 
@@ -37,13 +37,10 @@ export class AuthorsStoreService {
   }
 
   deleteAuthorsFromStore(authorsIds: string[]) {
-    const authors = this.authors$$.getValue();
-    const updatedAuthorsList = authors.filter(author => !authorsIds.includes(author.id));
+    const updatedAuthorsList = this.authors$$.getValue()
+      .filter(author => !authorsIds.includes(author.id));
     this.authors$$.next(updatedAuthorsList);
   }
-
-
-
 
   createAuthors(authors: Author[]): Observable<any> {
     return from(authors).pipe(
@@ -53,7 +50,17 @@ export class AuthorsStoreService {
         return acc;
       }, new Array()),
       // update authors local store
-      tap(responces => this.authors$$.next([...this.authors$$.getValue(), ...responces]))
+      tap(responces => {
+        if (responces.length > 0) this.authors$$.next([...this.authors$$.getValue(), ...responces]);
+      })
     )
+  }
+
+
+
+
+  /////////////////////////////////
+  getCurrentValuesFromStore() {
+    return this.authors$$.getValue();
   }
 }
