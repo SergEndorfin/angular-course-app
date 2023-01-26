@@ -1,5 +1,4 @@
 import { Inject, Injectable } from '@angular/core';
-import { User } from 'src/app/shared/model/user';
 
 const AUTH_TOKEN = 'auth-token';
 const USER = 'user';
@@ -30,7 +29,7 @@ export class SessionStorageService {
     };
   }
 
-  setUser(user: User) {
+  setUser(user: any) {
     this.window.sessionStorage.setItem(USER, JSON.stringify(user));
   }
 

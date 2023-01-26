@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { NotAuthorizedGuard } from './auth/guards/not-authorized.guard';
 
 const routes: Routes = [
   {
@@ -9,11 +10,13 @@ const routes: Routes = [
   },
   {
     path: 'login',
-    loadChildren: () => import('./features/login/login.module').then(m => m.LoginModule)
+    loadChildren: () => import('./features/login/login.module').then(m => m.LoginModule),
+    canActivate: [NotAuthorizedGuard]
   },
   {
     path: 'registration',
-    loadChildren: () => import('./features/registration/registration.module').then(m => m.RegistrationModule)
+    loadChildren: () => import('./features/registration/registration.module').then(m => m.RegistrationModule),
+    canActivate: [NotAuthorizedGuard]
   },
   {
     path: 'courses',
@@ -32,6 +35,9 @@ const routes: Routes = [
   ],
   exports: [
     RouterModule
+  ],
+  providers: [
+    NotAuthorizedGuard
   ]
 })
 export class AppRoutingModule { }

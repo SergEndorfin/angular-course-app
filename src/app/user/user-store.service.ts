@@ -30,7 +30,7 @@ export class UserStoreService {
         map(user => this.setNameIfEmpty(user))
       )
       .subscribe(user => {
-        this.sessionStore.setUser(user);
+        this.sessionStore.setUser({ name: user.name, role: user.role });
         this.name$$.next('' + user.name);
         this.isAdmin$$.next(user.role === 'admin');
       });
@@ -44,6 +44,5 @@ export class UserStoreService {
   logout() {
     this.name$$.next('');
     this.isAdmin$$.next(false);
-    this.sessionStore.deleteToken();
   }
 }

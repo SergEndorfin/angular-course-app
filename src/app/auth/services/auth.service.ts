@@ -15,13 +15,16 @@ export class AuthService {
   constructor(
     private sessionStorage: SessionStorageService,
     private httpClient: HttpClient
-  ) { }
+  ) {
+    this.isAuthorized$$.next(!!this.sessionStorage.getUser());
+  }
 
   login(email: string, password: string) {
     return this.httpClient.post<any>('http://localhost:4000/login', { email, password })
       .pipe(
         tap(responce => {
           this.sessionStorage.setToken(responce.result);
+          this.isAuthorized$$.next(true);
         })
       );
   }
@@ -30,7 +33,8 @@ export class AuthService {
     return this.httpClient.delete<any>("http://localhost:4000/logout", { headers: this.sessionStorage.headers })
       .pipe(
         tap(() => this.sessionStorage.deleteToken()),
-        tap(() => this.sessionStorage.deleteUser())
+        tap(() => this.sessionStorage.deleteUser()),
+        tap(() => this.isAuthorized$$.next(false))
       );
   }
 
