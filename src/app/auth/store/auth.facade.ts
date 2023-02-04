@@ -34,8 +34,8 @@ export class AuthStateFacade {
     this.store.dispatch(AuthActions.requestLogout());
   }
 
-  register() {
-
+  register(user: any) {
+    this.store.dispatch(AuthActions.requestRegister(user));
   }
 
   setAuthorization() {

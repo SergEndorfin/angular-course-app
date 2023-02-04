@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { faEyeSlash, faEnvelope } from '@fortawesome/free-regular-svg-icons';
+import { RegistrationResultService } from 'src/app/auth/services/registration-result.service';
 import { AuthStateFacade } from 'src/app/auth/store/auth.facade';
 import { switchBorder } from 'src/app/shared/utils/element-border-switcher';
 import { switchFieldTypeAndIcon } from 'src/app/shared/utils/password-field-switcher';
@@ -16,8 +17,11 @@ export class LoginComponent {
   faEnvelope = faEnvelope;
 
   loginErrorMessage$ = this.authStateFacade.getLoginErrorMessage$;
+  createdUserResponce$ = this.registrationResultService.userCreatedResponce$;
 
-  constructor(private authStateFacade: AuthStateFacade) { }
+  constructor(
+    private authStateFacade: AuthStateFacade,
+    private registrationResultService: RegistrationResultService) { }
 
   switchFieldTypeAndIcon(passwordField: HTMLInputElement) {
     this.faEyeSlash = switchFieldTypeAndIcon(passwordField, this.faEyeSlash);

@@ -2,7 +2,6 @@ import { createAction, props } from "@ngrx/store";
 import { AuthState } from "./auth.reducer";
 
 
-
 export const requestLogin = createAction(
   '[Login page] User login request',
   props<{ email: string; password: string }>()
@@ -18,14 +17,15 @@ export const requestLoginFail = createAction(
 
 
 export const requestRegister = createAction(
-  '[Registration page] User register request'
+  '[Registration page] User register request',
+  props<{ name: string, email: string; password: string }>()
 );
 export const requestRegisterSuccess = createAction(
   '[Registration page] User register success'
-
 );
 export const requestRegisterFail = createAction(
-  '[Registration page] User register fail'
+  '[Registration page] User register fail',
+  props<{ errorMessage: string }>()
 );
 
 

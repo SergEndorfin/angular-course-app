@@ -18,14 +18,15 @@
 
     <span>Email</span>
     <div class="field">
-      <input placeholder="Select email" emailValidator formControlName="email">
+      <input placeholder="Select email" emailValidator formControlName="email" (keydown)="onTyping()">
       <div class="icon envelop">
         <fa-icon [icon]="faEnvelope"></fa-icon>
       </div>
       <span *ngIf="email.errors?.['required'] && email.touched" class="error">Email is required.</span>
       <span *ngIf="email.errors?.['emailInvalid']" class="error">Your email should have <b>"test@test.test"</b>
         structure.</span>
-      <span *ngIf="doesUserExist$ | async" class="error">User with current email exists. Try another one.</span>
+      <span *ngIf="(errorMessage$ | async)" class="error">{{ errorMessage$ | async }}
+      </span>
     </div>
 
     <span>Password</span>
@@ -45,11 +46,7 @@
   </form>
 
   <div class="note">
-    <ng-container *ngIf="!(isNewUserCreated$ | async)">If you have an account you may </ng-container>
-    <ng-container *ngIf="isNewUserCreated$ | async as result"><span class="created">{{ result }} Now you may
-      </span>
-    </ng-container>
-    <strong><a routerLink="/login">Login</a></strong>
+    If you have an account you may <strong><a routerLink="/login">Login</a></strong>
   </div>
 
 </div>

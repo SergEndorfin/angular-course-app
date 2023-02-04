@@ -30,6 +30,14 @@ export const authReducer = createReducer(
     }
   }),
 
+  on(AuthActions.requestRegisterFail, (_state, actionValueFailResponce) => {
+    return {
+      ...initialAuthState,
+      errorMessage: actionValueFailResponce.errorMessage
+    }
+  }),
+
+  on(AuthActions.requestRegisterSuccess, () => initialAuthState),
 
   on(AuthActions.requestLogoutSuccess, () => initialAuthState)
 );

@@ -4,6 +4,7 @@ import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { catchError, concatMap, map, of, tap } from "rxjs";
 import { UserStateFacade } from "src/app/user/store/user.facade";
 import { AuthService } from "../services/auth.service";
+import { RegistrationResultService } from "../services/registration-result.service";
 import { AuthActions } from "./action-types";
 
 @Injectable()
@@ -41,10 +42,28 @@ export class AuthEffects {
     )
   );
 
+  register = createEffect(
+    () => this.actions$.pipe(
+      ofType(AuthActions.requestRegister),
+      concatMap(
+        reqRegisterAction => this.authService.register(reqRegisterAction)
+          .pipe(
+            tap(userCreatedResp => this.registrationResultService.userCreatedResponce$ = of(userCreatedResp)),
+            map(_userCreatedResp => AuthActions.requestRegisterSuccess()),
+            tap(() => this.router.navigateByUrl('/login')),
+            catchError(() => {
+              return of(AuthActions.requestLoginFail({ errorMessage: 'User with current email exists. Try another one.' }));
+            })
+          )
+      )
+    )
+  );
+
   constructor(
     private actions$: Actions,
     private authService: AuthService,
     private router: Router,
-    private userStateFacade: UserStateFacade
+    private userStateFacade: UserStateFacade,
+    private registrationResultService: RegistrationResultService
   ) { }
 }

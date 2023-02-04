@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { faEyeSlash, faUser, faEnvelope } from '@fortawesome/free-regular-svg-icons';
 import { Observable, of } from 'rxjs';
-import { AuthService } from 'src/app/auth/services/auth.service';
+import { AuthStateFacade } from 'src/app/auth/store/auth.facade';
 import { switchBorder } from 'src/app/shared/utils/element-border-switcher';
 import { createEmailValidator } from 'src/app/shared/utils/email.validator';
 import { switchFieldTypeAndIcon } from 'src/app/shared/utils/password-field-switcher';
@@ -17,6 +17,9 @@ export class RegistrationComponent {
   faUser = faUser;
   faEyeSlash = faEyeSlash;
   faEnvelope = faEnvelope;
+
+  errorMessage$: Observable<string | undefined> = this.authStateFacade.getRegisterErrorMessage$;
+  triedToRegister = false;
 
   isNewUserCreated$: Observable<string>;
   doesUserExist$: Observable<boolean>;
@@ -33,7 +36,7 @@ export class RegistrationComponent {
 
   constructor(
     private fb: FormBuilder,
-    private authService: AuthService
+    private authStateFacade: AuthStateFacade
   ) { }
 
   get name() {
@@ -57,18 +60,14 @@ export class RegistrationComponent {
   }
 
   registation() {
-    this.authService.register(this.form.value)
-      .subscribe({
-        next: responce => {
-          this.isNewUserCreated$ = of(responce.result);
-          this.doesUserExist$ = of(false);
-          this.form.reset();
-        },
-        error: () => this.doesUserExist$ = of(true)
-      });
+    this.triedToRegister = true;
+    this.authStateFacade.register(this.form.value);
+    this.errorMessage$ = this.authStateFacade.getRegisterErrorMessage$;
   }
 
-  clearFormFields() {
-
+  onTyping() {
+    if (this.triedToRegister) {
+      this.errorMessage$ = of(undefined);
+    }
   }
 }

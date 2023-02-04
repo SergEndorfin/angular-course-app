@@ -1,6 +1,8 @@
 <h2>Login</h2>
 <div class="container">
 
+  <div class="created" *ngIf="createdUserResponce$ | async as result">{{ result.result }} Now you may login. </div>
+
   <form #loginForm="ngForm" (ngSubmit)="login(email.value, password.value)">
 
     <span>Email</span>
