@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
-import { SessionStorageService } from 'src/app/auth/services/session-storage.service';
+import { AuthSessionStorageService } from 'src/app/auth/services/session-storage.service';
 import { Author } from 'src/app/shared/model/author';
 
 @Injectable({
@@ -9,7 +9,7 @@ import { Author } from 'src/app/shared/model/author';
 })
 export class AuthorsService {
 
-  constructor(private httpClient: HttpClient, private sessionStorage: SessionStorageService) { }
+  constructor(private httpClient: HttpClient, private sessionStorage: AuthSessionStorageService) { }
 
   getAllAuthors(): Observable<Author[]> {
     return this.httpClient.get<any>('http://localhost:4000/authors/all')

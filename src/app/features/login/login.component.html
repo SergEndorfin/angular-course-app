@@ -31,7 +31,8 @@
     <app-button [buttonText]="'LOGIN'" [disabled]="!loginForm.valid">
     </app-button>
 
-    <span *ngIf="isCredentialsInvalid$ | async" class="error"> User not found. Check your credentials, please.</span>
+    <span *ngIf="loginErrorMessage$ | async" class="error">{{ loginErrorMessage$ | async }} Check your
+      credentials, please.</span>
 
   </form>
 

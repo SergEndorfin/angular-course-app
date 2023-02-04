@@ -1,8 +1,7 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
 import { faEyeSlash, faUser, faEnvelope } from '@fortawesome/free-regular-svg-icons';
-import { map, Observable, of, tap } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { switchBorder } from 'src/app/shared/utils/element-border-switcher';
 import { createEmailValidator } from 'src/app/shared/utils/email.validator';
@@ -34,7 +33,6 @@ export class RegistrationComponent {
 
   constructor(
     private fb: FormBuilder,
-    private router: Router,
     private authService: AuthService
   ) { }
 

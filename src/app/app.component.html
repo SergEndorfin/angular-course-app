@@ -1,20 +1,20 @@
 <header>
   <img class="logo" src="../assets/logo.svg" alt="logo" routerLink="/" />
   <app-header>
+    <ng-container *ngIf="isCredentialsPageActive()">
 
-    <ng-container *ngIf="isCoursesRouteActive()">
-
-      <ng-container *ngIf="userName$ | async; else logoutBtn">
+      <ng-container *ngIf="(userName$ | async); else logoutBtn">
         <span class="user-name">{{ userName$ | async }}</span>
         <app-button [buttonText]="'LOGOUT'" (click)="onLogoutButtonClicked()"></app-button>
       </ng-container>
-
-      <ng-template #logoutBtn>
-        <app-button [buttonText]="'LOGIN'" routerLink="/login"></app-button>
-      </ng-template>
 
     </ng-container>
   </app-header>
 </header>
 
 <router-outlet></router-outlet>
+
+
+<ng-template #logoutBtn>
+  <app-button [buttonText]="'LOGIN'" routerLink="/login"></app-button>
+</ng-template>

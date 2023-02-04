@@ -1,12 +1,11 @@
 import { Inject, Injectable } from '@angular/core';
 
 const AUTH_TOKEN = 'auth-token';
-const USER = 'user';
 
 @Injectable({
   providedIn: 'root'
 })
-export class SessionStorageService {
+export class AuthSessionStorageService {
 
   constructor(@Inject('Window') private window: Window) { }
 
@@ -27,17 +26,5 @@ export class SessionStorageService {
       'Content-Type': 'application/json',
       'Authorization': `${this.getToken()}`
     };
-  }
-
-  setUser(user: any) {
-    this.window.sessionStorage.setItem(USER, JSON.stringify(user));
-  }
-
-  deleteUser() {
-    this.window.sessionStorage.removeItem(USER);
-  }
-
-  getUser() {
-    return this.window.sessionStorage.getItem(USER);
   }
 }

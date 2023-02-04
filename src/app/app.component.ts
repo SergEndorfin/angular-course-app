@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { CoursesStoreService } from './services/courses/courses-store.service';
 import { AuthorsStoreService } from './services/authors/authors-store.service';
-import { UserStoreService } from './user/user-store.service';
 import { Observable, tap } from 'rxjs';
-import { AuthService } from './auth/services/auth.service';
+import { AuthStateFacade } from './auth/store/auth.facade';
+import { UserStateFacade } from './user/store/user.facade';
 
 @Component({
   selector: 'app-root',
@@ -13,35 +13,30 @@ import { AuthService } from './auth/services/auth.service';
 })
 export class AppComponent implements OnInit {
 
-  userName$: Observable<string | null>;
+  userName$: Observable<string | undefined> = this.userStateFacade.name$;
 
   constructor(
     private activateRoute: ActivatedRoute,
     private coursesStore: CoursesStoreService,
     private authorsStoreService: AuthorsStoreService,
-    private userStoreService: UserStoreService,
-    private authService: AuthService,
-    private router: Router
+    private authStateFacade: AuthStateFacade,
+    private userStateFacade: UserStateFacade
   ) { }
 
   ngOnInit(): void {
     this.coursesStore.init();
     this.authorsStoreService.init();
-    this.userName$ = this.userStoreService.name$;
+    this.authStateFacade.setAuthorization();
+    this.userStateFacade.setUserIfExists();
   }
 
-  isCoursesRouteActive() {
+  isCredentialsPageActive() {
     const snapshot: any = this.activateRoute.snapshot;
-    return snapshot['_routerState'].url === '/courses';
+    const currentPage = snapshot['_routerState'].url;
+    return currentPage !== '/login' && currentPage !== '/registration';
   }
 
   onLogoutButtonClicked() {
-    this.authService.logout()
-      .pipe(
-        tap(() => this.userStoreService.logout())
-      )
-      .subscribe();
-    this.router.navigateByUrl('/login');
+    this.authStateFacade.logout();
   }
-
 }

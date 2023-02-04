@@ -3,7 +3,7 @@ import { Course } from 'src/app/shared/model/course';
 import { ButtonContent } from 'src/app/shared/utils/button-icon-name';
 import { map, Observable } from 'rxjs';
 import { CoursesStoreService } from 'src/app/services/courses/courses-store.service';
-import { UserStoreService } from 'src/app/user/user-store.service';
+import { UserStateFacade } from 'src/app/user/store/user.facade';
 
 @Component({
   selector: 'app-courses',
@@ -13,7 +13,7 @@ import { UserStoreService } from 'src/app/user/user-store.service';
 export class CoursesComponent implements OnInit {
 
   courses$: Observable<Course[]>;
-  isAdmin$: Observable<boolean>;
+  isAdmin$: Observable<boolean> = this.userStateFacade.isAdmin$;
 
   // Buttons:
   pencilIcon = ButtonContent.PENCIL;
@@ -25,12 +25,11 @@ export class CoursesComponent implements OnInit {
 
   constructor(
     private coursesStoreService: CoursesStoreService,
-    private userStoreService: UserStoreService
+    private userStateFacade: UserStateFacade
   ) { }
 
   ngOnInit(): void {
     this.courses$ = this.coursesStoreService.courses$;
-    this.isAdmin$ = this.userStoreService.isAdmin$;
   }
 
   searchResult(courseTitle: string) {
