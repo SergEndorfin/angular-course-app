@@ -4,6 +4,8 @@ import { ButtonContent } from 'src/app/shared/utils/button-icon-name';
 import { map, Observable } from 'rxjs';
 import { CoursesStoreService } from 'src/app/services/courses/courses-store.service';
 import { UserStateFacade } from 'src/app/user/store/user.facade';
+import { AuthorsStateFacade } from 'src/app/store/authors/authors.facade';
+import { CoursesStateFacade } from 'src/app/store/courses/courses.facade';
 
 @Component({
   selector: 'app-courses',
@@ -25,11 +27,17 @@ export class CoursesComponent implements OnInit {
 
   constructor(
     private coursesStoreService: CoursesStoreService,
-    private userStateFacade: UserStateFacade
+    private userStateFacade: UserStateFacade,
+
+    private authorsStateFacade: AuthorsStateFacade,
+    private coursesStateFacade: CoursesStateFacade
   ) { }
 
   ngOnInit(): void {
     this.courses$ = this.coursesStoreService.courses$;
+
+    this.authorsStateFacade.getAuthors();
+    this.coursesStateFacade.getAllCourses();
   }
 
   searchResult(courseTitle: string) {

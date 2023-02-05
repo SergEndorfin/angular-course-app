@@ -42,7 +42,7 @@ export class AuthEffects {
     )
   );
 
-  register = createEffect(
+  register$ = createEffect(
     () => this.actions$.pipe(
       ofType(AuthActions.requestRegister),
       concatMap(
