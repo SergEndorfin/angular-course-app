@@ -2,8 +2,6 @@ import { createReducer, on } from "@ngrx/store";
 import { Author } from "src/app/shared/model/author";
 import { AuthorsActions } from "./action-types";
 
-
-
 export const authorsFeatureKey = 'authors';
 
 export interface AuthorsState {
@@ -19,8 +17,9 @@ export const initialState: AuthorsState = {
 export const authorsReducer = createReducer(
   initialState,
 
-  on(AuthorsActions.requestAuthorsSuccess, (_state, actionValueOkResponce) => {
+  on(AuthorsActions.requestAuthorsSuccess, (state, actionValueOkResponce) => {
     return {
+      ...state,
       authors: actionValueOkResponce.authors
     }
   })

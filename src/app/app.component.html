@@ -1,5 +1,5 @@
 <header>
-  <img class="logo" src="../assets/logo.svg" alt="logo" routerLink="/" />
+  <img class="logo" src="../assets/logo.svg" alt="logo" routerLink="/" (click)="onLogoClicked()">
   <app-header>
     <ng-container *ngIf="isCredentialsPageActive()">
 

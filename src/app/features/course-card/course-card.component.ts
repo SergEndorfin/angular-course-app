@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { map, Observable } from 'rxjs';
+import { map, Observable, tap } from 'rxjs';
 import { AuthorsStoreService } from 'src/app/services/authors/authors-store.service';
 import { Course } from 'src/app/shared/model/course';
 
@@ -24,7 +24,7 @@ export class CourseCardComponent implements OnInit {
           map(author => author
             .map(author => author.name)
             .join(', ')
-          )
+          ),
         );
   }
 }

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, concatMap, from, map, Observable, of, reduce, tap } from 'rxjs';
+import { concatMap, from, map, Observable, of, reduce } from 'rxjs';
 import { Author } from 'src/app/shared/model/author';
+import { AuthorsStateFacade } from 'src/app/store/authors/authors.facade';
 import { AuthorsService } from './authors.service';
 
 @Injectable({
@@ -8,22 +9,23 @@ import { AuthorsService } from './authors.service';
 })
 export class AuthorsStoreService {
 
-  private authors$$ = new BehaviorSubject<Author[]>([]);
+  authors$: Observable<Author[]>;
 
-  authors$: Observable<Author[]> = this.authors$$.asObservable();
-
-  constructor(private authorsService: AuthorsService) { }
-
-  init() {
-    this.authorsService.getAllAuthors()
-      .subscribe(authors => this.authors$$.next(authors))
+  constructor(
+    private authorsService: AuthorsService,
+    private authorsStateFacade: AuthorsStateFacade
+  ) {
+    this.authors$ = authorsStateFacade.authors$;
   }
 
   selectAuthorsByIds(authorIds: string[]): Observable<Author[]> {
-    return this.authors$.pipe(
-      map(authors => authors.filter(author => authorIds.includes(author.id)))
-    );
+    return this.authorsStateFacade.authors$
+      .pipe(
+        map(authors => authors.filter(author => authorIds.includes(author.id)))
+      );
   }
+
+
 
   deleteAuthorsByIds(ids: string[]): Observable<any> {
     return of(...ids)
@@ -36,11 +38,11 @@ export class AuthorsStoreService {
       )
   }
 
-  deleteAuthorsFromStore(authorsIds: string[]) {
-    const updatedAuthorsList = this.authors$$.getValue()
-      .filter(author => !authorsIds.includes(author.id));
-    this.authors$$.next(updatedAuthorsList);
-  }
+  // deleteAuthorsFromStore(authorsIds: string[]) {
+  //   const updatedAuthorsList = this.authors$$.getValue()
+  //     .filter(author => !authorsIds.includes(author.id));
+  //   this.authors$$.next(updatedAuthorsList);
+  // }
 
   createAuthors(authors: Author[]): Observable<any> {
     return from(authors).pipe(
@@ -50,17 +52,9 @@ export class AuthorsStoreService {
         return acc;
       }, new Array()),
       // update authors local store
-      tap(responces => {
-        if (responces.length > 0) this.authors$$.next([...this.authors$$.getValue(), ...responces]);
-      })
+      // tap(responces => {
+      //   if (responces.length > 0) this.authors$$.next([...this.authors$$.getValue(), ...responces]);
+      // })
     )
-  }
-
-
-
-
-  /////////////////////////////////
-  getCurrentValuesFromStore() {
-    return this.authors$$.getValue();
   }
 }

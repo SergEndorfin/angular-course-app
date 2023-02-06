@@ -25,10 +25,37 @@ export const initialAuthState: CoursesState = {
 
 export const coursesReducer = createReducer(
   initialAuthState,
+  // get All:
+  on(CoursesActions.requestAllCourses, (state) => {
+    return {
+      ...state,
+      isAllCoursesLoading: true
+    }
+  }),
   on(CoursesActions.requestAllCoursesSuccess, (state, action) => {
     return {
       ...state,
-      allCourses: action.courses
+      allCourses: action.courses,
+      courses: action.courses,
+      isAllCoursesLoading: false
     }
-  })
+  }),
+  // filter:
+  on(CoursesActions.requestFilteredCourses, (state) => {
+    return {
+      ...state,
+      courses: [],
+      isSearchState: true
+    }
+  }),
+  on(CoursesActions.requestFilteredCoursesSuccess, (state, action) => {
+    return {
+      ...state,
+      courses: action.courses,
+      isSearchState: false
+    }
+  }),
+  // get one:
+
+
 )

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { first, map, Observable } from 'rxjs';
+import { first, map, Observable, tap } from 'rxjs';
 import { AuthorsStoreService } from 'src/app/services/authors/authors-store.service';
 import { CoursesStoreService } from 'src/app/services/courses/courses-store.service';
 import { Course } from 'src/app/shared/model/course';
@@ -22,8 +22,10 @@ export class CourseComponent implements OnInit {
 
   ngOnInit(): void {
     const courseId = this.route.snapshot.params['id'];
+    console.log(courseId);
     this.course$ = this.coursesStoreService.selectCourseById(courseId)
       .pipe(
+        tap(console.log),
         first()
       );
   }

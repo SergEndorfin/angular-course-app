@@ -28,11 +28,12 @@ export const requestSingleCourseFail = createAction(
 
 
 export const requestFilteredCourses = createAction(
-  '[Course] Get filtered one request',
+  '[Courses Search] Request',
   props<{ searchValue: string }>()
 );
 export const requestFilteredCoursesSuccess = createAction(
-  '[Course] Get filtered one success'
+  '[Courses Search] Success',
+  props<{ courses: Course[] }>()
 );
 
 

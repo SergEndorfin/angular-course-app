@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { CoursesStoreService } from './services/courses/courses-store.service';
-import { AuthorsStoreService } from './services/authors/authors-store.service';
 import { Observable, tap } from 'rxjs';
 import { AuthStateFacade } from './auth/store/auth.facade';
+import { CoursesStateFacade } from './store/courses/courses.facade';
 import { UserStateFacade } from './user/store/user.facade';
 
 @Component({
@@ -17,15 +16,12 @@ export class AppComponent implements OnInit {
 
   constructor(
     private activateRoute: ActivatedRoute,
-    private coursesStore: CoursesStoreService,
-    private authorsStoreService: AuthorsStoreService,
     private authStateFacade: AuthStateFacade,
-    private userStateFacade: UserStateFacade
+    private userStateFacade: UserStateFacade,
+    private coursesStateFacade: CoursesStateFacade
   ) { }
 
   ngOnInit(): void {
-    this.coursesStore.init();
-    this.authorsStoreService.init();
     this.authStateFacade.setAuthorization();
     this.userStateFacade.setUserIfExists();
   }
@@ -38,5 +34,9 @@ export class AppComponent implements OnInit {
 
   onLogoutButtonClicked() {
     this.authStateFacade.logout();
+  }
+
+  onLogoClicked() {
+    this.coursesStateFacade.getFilteredCourses('');
   }
 }

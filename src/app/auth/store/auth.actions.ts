@@ -3,15 +3,15 @@ import { AuthState } from "./auth.reducer";
 
 
 export const requestLogin = createAction(
-  '[Login page] User login request',
+  '[Login] User login request',
   props<{ email: string; password: string }>()
 );
 export const requestLoginSuccess = createAction(
-  '[Login page] User login success',
+  '[Login] User login success',
   props<AuthState>()
 );
 export const requestLoginFail = createAction(
-  '[Login page] User login fail',
+  '[Login] User login fail',
   props<{ errorMessage: string }>()
 );
 

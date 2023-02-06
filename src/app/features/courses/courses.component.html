@@ -9,7 +9,7 @@
         <div class="buttons">
           <app-button [buttonText]="'SHOW COURSE'" [routerLink]="[course.id]"></app-button>
           <ng-container *ngIf="isAdmin$ | async">
-            <app-button [buttonIconName]="trashIcon" (click)="deleteCourse(course.title, course.id)"></app-button>
+            <app-button [buttonIconName]="trashIcon" (click)="openConfirmWindow(course.title, course.id)"></app-button>
             <app-button [buttonIconName]="pencilIcon" [routerLink]="['edit', course.id]"></app-button>
           </ng-container>
         </div>
@@ -31,7 +31,7 @@
 
 
 <ng-container *ngIf="title">
-  <app-confirm-window (confirmWindowButtonClicked)="onConfirmWindowClicked($event)" [title]="title"
+  <app-confirm-window (confirmWindowButtonClicked)="onConfirmButtonClicked($event)" [title]="title"
     [message]="confirmOnDeleteMessage">
   </app-confirm-window>
 </ng-container>

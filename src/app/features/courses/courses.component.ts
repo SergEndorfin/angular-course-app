@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Course } from 'src/app/shared/model/course';
 import { ButtonContent } from 'src/app/shared/utils/button-icon-name';
-import { map, Observable } from 'rxjs';
-import { CoursesStoreService } from 'src/app/services/courses/courses-store.service';
+import { iif, mergeMap, Observable } from 'rxjs';
 import { UserStateFacade } from 'src/app/user/store/user.facade';
 import { AuthorsStateFacade } from 'src/app/store/authors/authors.facade';
 import { CoursesStateFacade } from 'src/app/store/courses/courses.facade';
@@ -15,45 +14,43 @@ import { CoursesStateFacade } from 'src/app/store/courses/courses.facade';
 export class CoursesComponent implements OnInit {
 
   courses$: Observable<Course[]>;
-  isAdmin$: Observable<boolean> = this.userStateFacade.isAdmin$;
+  isAdmin$: Observable<boolean>;
 
   // Buttons:
   pencilIcon = ButtonContent.PENCIL;
   trashIcon = ButtonContent.TRASH;
 
+  // Modal window:
   title?: string;
   courseId?: string;
   confirmOnDeleteMessage = 'Confirm that you really want to delete the course.';
 
   constructor(
-    private coursesStoreService: CoursesStoreService,
     private userStateFacade: UserStateFacade,
-
-    private authorsStateFacade: AuthorsStateFacade,
-    private coursesStateFacade: CoursesStateFacade
+    private coursesStateFacade: CoursesStateFacade,
+    private authorsStateFacade: AuthorsStateFacade
   ) { }
 
   ngOnInit(): void {
-    this.courses$ = this.coursesStoreService.courses$;
-
     this.authorsStateFacade.getAuthors();
     this.coursesStateFacade.getAllCourses();
+
+    this.isAdmin$ = this.userStateFacade.isAdmin$;
+    this.courses$ = this.coursesStateFacade.courses$;
   }
 
   searchResult(courseTitle: string) {
-    this.courses$ = this.coursesStoreService.courses$.pipe(
-      map(courses => courses.filter(course => course.title.includes(courseTitle)))
-    )
+    this.coursesStateFacade.getFilteredCourses(courseTitle);
   }
 
-  deleteCourse(title: string, courseId: string) {
+  openConfirmWindow(title: string, courseId: string) {
     this.title = title;
     this.courseId = courseId;
   }
 
-  onConfirmWindowClicked(buttonValue: string): void {
+  onConfirmButtonClicked(buttonValue: string): void {
     if (buttonValue === ButtonContent.OK) {
-      this.coursesStoreService.deleteCourseById(this.courseId!);
+      // this.coursesStoreService.deleteCourseById(this.courseId!);
       this.courseId = undefined;
     }
     this.title = undefined;
