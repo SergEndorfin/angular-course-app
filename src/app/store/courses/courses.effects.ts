@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
+import { Router } from "@angular/router";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
-import { catchError, iif, map, mergeMap, of, tap } from "rxjs";
+import { catchError, concatMap, iif, map, mergeMap, of, tap } from "rxjs";
 import { CoursesService } from "src/app/services/courses/courses.service";
 import { AuthorsStateFacade } from "../authors/authors.facade";
 import { mapAuthorsToCourses, mapAuthorsToSingleCourse } from "../service/authors-to-courses.service";
@@ -52,15 +53,37 @@ export class CoursesEffects {
     )
   )
 
-  // deleteCourse$ = createEffect(
+  deleteCourse$ = createEffect(
+    () => this.actions$.pipe(
+      ofType(CoursesActions.requestDeleteCourse),
+      concatMap(courseId => this.coursesService.deleteCourse(courseId.id)
+        .pipe(
+          tap(() => this.coursesStateFacade.getAllCourses()),
+          tap(() => () => this.router.navigateByUrl('/courses')),
+          catchError(err => of(CoursesActions.requestDeleteCourseFail({ errorMessage: err.error["result"] })))
+        )
+      )
+    )
+  )
+
   // editCourse$ = createEffect(
   // createCourse$ = createEffect(
-  // redirectToTheCoursesPage$ = createEffect(
+
+  redirectToTheCoursesPage$ = createEffect(
+    () => this.actions$.pipe(
+      ofType(CoursesActions.requestCreateCourseSuccess),
+      ofType(CoursesActions.requestEditCourseSuccess),
+      ofType(CoursesActions.requestSingleCourseFail),
+      tap(() => () => this.router.navigateByUrl('/courses'))
+    ),
+    { dispatch: false }
+  )
 
   constructor(
     private actions$: Actions,
     private coursesService: CoursesService,
     private coursesStateFacade: CoursesStateFacade,
-    private authorsStateFacade: AuthorsStateFacade
+    private authorsStateFacade: AuthorsStateFacade,
+    private router: Router
   ) { }
 }

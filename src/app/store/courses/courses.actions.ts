@@ -44,7 +44,8 @@ export const requestDeleteCourse = createAction(
   props<{ id: string }>()
 );
 export const requestDeleteCourseFail = createAction(
-  '[Course] Delete one fail'
+  '[Course] Delete one fail',
+  props<{ errorMessage: string }>()
 );
 
 

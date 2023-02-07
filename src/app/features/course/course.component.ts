@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { first, map, Observable, tap } from 'rxjs';
-import { AuthorsStoreService } from 'src/app/services/authors/authors-store.service';
-import { CoursesStoreService } from 'src/app/services/courses/courses-store.service';
+import { filter, first, map, Observable } from 'rxjs';
+import { CoursesService } from 'src/app/services/courses/courses.service';
 import { Course } from 'src/app/shared/model/course';
+import { CoursesStateFacade } from 'src/app/store/courses/courses.facade';
 
 @Component({
   selector: 'app-course',
@@ -16,25 +16,22 @@ export class CourseComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private coursesStoreService: CoursesStoreService,
-    private authorStoreService: AuthorsStoreService
+    private courseStateFacade: CoursesStateFacade,
+    private coursesService: CoursesService
   ) { }
 
   ngOnInit(): void {
     const courseId = this.route.snapshot.params['id'];
-    console.log(courseId);
-    this.course$ = this.coursesStoreService.selectCourseById(courseId)
+
+    this.course$ = this.courseStateFacade.allCourses$
       .pipe(
-        tap(console.log),
+        map(courses => {
+          const foundCourse = courses.find(course => course.id === courseId);
+          if (foundCourse === undefined) return this.coursesService.getEmpty();
+          return foundCourse;
+        }),
+        filter(course => !!course),
         first()
       );
   }
-
-  getAuthorsForCurrentCourse(course: Course): Observable<string> {
-    return this.authorStoreService.selectAuthorsByIds(course.authors)
-      .pipe(
-        map(author => author.map(author => author.name).join(', '))
-      );
-  }
-
 }

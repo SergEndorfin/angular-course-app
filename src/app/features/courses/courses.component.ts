@@ -51,9 +51,9 @@ export class CoursesComponent implements OnInit {
 
   onConfirmButtonClicked(buttonValue: string): void {
     if (buttonValue === ButtonContent.OK) {
-      // this.coursesStoreService.deleteCourseById(this.courseId!);
-      this.courseId = undefined;
+      this.coursesStateFacade.deleteCourse(this.courseId!);
     }
+    this.courseId = undefined;
     this.title = undefined;
   }
 }

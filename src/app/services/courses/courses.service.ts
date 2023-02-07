@@ -33,7 +33,7 @@ export class CoursesService {
       );
   }
 
-  deleteCourseById(id: string): Observable<any> {
+  deleteCourse(id: string): Observable<any> {
     return this.httpClient
       .delete(`http://localhost:4000/courses/${id}`, { headers: this.sessionStorage.headers });
   }
