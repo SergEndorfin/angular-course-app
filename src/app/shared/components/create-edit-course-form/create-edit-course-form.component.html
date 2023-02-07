@@ -33,7 +33,7 @@
       <span class="label">Authors List</span>
       <div class="authors-list">
         <ng-container *ngFor="let author of authors.controls; let i = index">
-          <span>{{ author.value.author.name }}</span>
+          <span>{{ author.value.author }}</span>
           <fa-icon [icon]="xMarkBtn" (click)="deleteAuthor(i)"></fa-icon>
         </ng-container>
       </div>

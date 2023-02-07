@@ -1,18 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { FormBuilder, Validators, FormArray } from '@angular/forms';
 import { switchBorder } from '../../utils/element-border-switcher';
 import { Course } from '../../model/course';
 import { ActivatedRoute } from '@angular/router';
-import { CoursesStoreService } from 'src/app/services/courses/courses-store.service';
-import { AuthorsStoreService } from 'src/app/services/authors/authors-store.service';
+import { CoursesStateFacade } from 'src/app/store/courses/courses.facade';
+import { filter, Subscription, tap } from 'rxjs';
 
 @Component({
   selector: 'app-create-edit-course-form',
   templateUrl: './create-edit-course-form.component.html',
   styleUrls: ['./create-edit-course-form.component.scss']
 })
-export class CreateEditCourseFormComponent implements OnInit {
+export class CreateEditCourseFormComponent implements OnInit, OnDestroy {
 
   xMarkBtn = faXmark;
 
@@ -27,21 +27,34 @@ export class CreateEditCourseFormComponent implements OnInit {
     id: [''],
   });
 
+  currentCourseSubscription?: Subscription;
+
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
-    private coursesStoreService: CoursesStoreService,
-    private authorsStoreService: AuthorsStoreService
+    private coursesStateFacade: CoursesStateFacade
   ) { }
 
   ngOnInit(): void {
     const courseId = this.route.snapshot.params['id'];
     if (courseId) {
-      const subscription = this.coursesStoreService.selectCourseById(courseId)
-        .subscribe(course => this.fillInTheFormFields(course));
-      // do I need to unsubscribe here?
-      subscription.unsubscribe();
+      this.coursesStateFacade.getSingleCourse(courseId);
+
+      this.currentCourseSubscription = this.coursesStateFacade.course$
+        .pipe(
+          filter(course => !!course),
+          tap(course => {
+            if (course) this.fillInTheFormFields(course)
+          })
+        )
+        .subscribe();
     }
+  }
+
+  ngOnDestroy(): void {
+    this.currentCourseSubscription?.unsubscribe();
+    this.form.reset();
+    this.authors.clear();
   }
 
   get title() {
@@ -76,15 +89,14 @@ export class CreateEditCourseFormComponent implements OnInit {
     this.id.setValue(course.id);
     this.creationDate.setValue(course.creationDate.toString());
 
-    const authorNames$ = this.authorsStoreService.selectAuthorsByIds(course.authors);
+    course.authors
+      .filter(author => !!author)
+      .forEach(author => {
+        this.authors.push(this.fb.group({
+          author: [author]
+        }))
+      })
 
-    const subscription = authorNames$.subscribe(
-      authors => authors.forEach(author =>
-        this.authors.push(this.fb.group({ author }))
-      )
-    );
-    // do I need to unsubscribe here?
-    subscription.unsubscribe()
   }
 
   addErrorStyle(errors: any, isTouched: boolean, element: any) {
@@ -95,7 +107,7 @@ export class CreateEditCourseFormComponent implements OnInit {
     const authorName = inputElement.value;
     if (authorName.trim() !== '') {
       const authorsForm = this.fb.group({
-        author: [{ name: authorName, id: '' }]
+        author: [authorName]
       });
       this.authors.push(authorsForm);
       inputElement.value = '';

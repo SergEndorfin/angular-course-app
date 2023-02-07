@@ -1,6 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { map, Observable, tap } from 'rxjs';
-import { AuthorsStoreService } from 'src/app/services/authors/authors-store.service';
+import { Component, Input } from '@angular/core';
 import { Course } from 'src/app/shared/model/course';
 
 @Component({
@@ -8,23 +6,8 @@ import { Course } from 'src/app/shared/model/course';
   templateUrl: './course-card.component.html',
   styleUrls: ['./course-card.component.scss']
 })
-export class CourseCardComponent implements OnInit {
+export class CourseCardComponent {
 
   @Input() course: Course;
-  @Input() isConfirmWindowColosed!: boolean;
 
-  authorsNames$: Observable<string>;
-
-  constructor(private authorsStoreService: AuthorsStoreService) { }
-
-  ngOnInit(): void {
-    this.authorsNames$ =
-      this.authorsStoreService.selectAuthorsByIds(this.course.authors)
-        .pipe(
-          map(author => author
-            .map(author => author.name)
-            .join(', ')
-          ),
-        );
-  }
 }

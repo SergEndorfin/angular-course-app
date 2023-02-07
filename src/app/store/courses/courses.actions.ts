@@ -20,10 +20,12 @@ export const requestSingleCourse = createAction(
   props<{ id: string }>()
 );
 export const requestSingleCourseSuccess = createAction(
-  '[Course] Get one success'
+  '[Course] Get one success',
+  props<Course>()
 );
 export const requestSingleCourseFail = createAction(
-  '[Course] Get one fail'
+  '[Course] Get one fail',
+  props<{ errorMessage: string }>()
 );
 
 

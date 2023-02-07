@@ -19,7 +19,10 @@ export class CreateEditCourseComponent implements OnInit, AfterViewInit {
   private isCreateCourseButtonActive$$: BehaviorSubject<boolean>;
   isCreateCourseButtonActive$: Observable<boolean>;
 
-  constructor(private router: Router, private courseStoreService: CoursesStoreService, private authorStoreService: AuthorsStoreService) { }
+  constructor(
+    private router: Router,
+    private courseStoreService: CoursesStoreService
+  ) { }
 
   ngOnInit(): void {
     this.isCreateCourseButtonActive$$ = new BehaviorSubject(this.router.url.includes('add') ? true : false);

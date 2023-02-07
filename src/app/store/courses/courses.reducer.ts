@@ -32,11 +32,18 @@ export const coursesReducer = createReducer(
       isAllCoursesLoading: true
     }
   }),
-  on(CoursesActions.requestAllCoursesSuccess, (state, action) => {
+  on(CoursesActions.requestAllCoursesSuccess, (_state, action) => {
     return {
-      ...state,
+      ...initialAuthState,
       allCourses: action.courses,
       courses: action.courses,
+      isAllCoursesLoading: false
+    }
+  }),
+  on(CoursesActions.requestAllCoursesFail, (_state, action) => {
+    return {
+      ...initialAuthState,
+      errorMessage: action.errorMessage,
       isAllCoursesLoading: false
     }
   }),
@@ -56,6 +63,26 @@ export const coursesReducer = createReducer(
     }
   }),
   // get one:
-
+  on(CoursesActions.requestSingleCourse, (state) => {
+    return {
+      ...state,
+      isSingleCourseLoading: true
+    }
+  }),
+  on(CoursesActions.requestSingleCourseSuccess, (state, course) => {
+    return {
+      ...state,
+      course: course,
+      isSingleCourseLoading: false
+    }
+  }),
+  on(CoursesActions.requestSingleCourseFail, (state, action) => {
+    return {
+      ...state,
+      errorMessage: action.errorMessage,
+      isSingleCourseLoading: false
+    }
+  }),
+  // delete one:
 
 )

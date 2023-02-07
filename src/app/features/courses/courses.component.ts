@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Course } from 'src/app/shared/model/course';
 import { ButtonContent } from 'src/app/shared/utils/button-icon-name';
-import { iif, mergeMap, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { UserStateFacade } from 'src/app/user/store/user.facade';
 import { AuthorsStateFacade } from 'src/app/store/authors/authors.facade';
 import { CoursesStateFacade } from 'src/app/store/courses/courses.facade';
@@ -32,6 +32,7 @@ export class CoursesComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+
     this.authorsStateFacade.getAuthors();
     this.coursesStateFacade.getAllCourses();
 
@@ -39,11 +40,11 @@ export class CoursesComponent implements OnInit {
     this.courses$ = this.coursesStateFacade.courses$;
   }
 
-  searchResult(courseTitle: string) {
+  onSearch(courseTitle: string) {
     this.coursesStateFacade.getFilteredCourses(courseTitle);
   }
 
-  openConfirmWindow(title: string, courseId: string) {
+  openWindowToConfirmDeletion(title: string, courseId: string) {
     this.title = title;
     this.courseId = courseId;
   }
