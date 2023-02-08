@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { AdminGuard } from 'src/app/auth/guards/admin.guard';
 import { CreateEditCourseComponent } from 'src/app/shared/components';
 import { CourseComponent } from '../course/course.component';
 import { CoursesComponent } from './courses.component';
@@ -11,11 +12,13 @@ const routes: Routes = [
   },
   {
     path: 'add',
-    component: CreateEditCourseComponent
+    component: CreateEditCourseComponent,
+    canActivate: [AdminGuard]
   },
   {
     path: 'edit/:id',
-    component: CreateEditCourseComponent
+    component: CreateEditCourseComponent,
+    canActivate: [AdminGuard]
   },
   {
     path: ":id",
@@ -31,6 +34,8 @@ const routes: Routes = [
   exports: [
     RouterModule
   ],
-  providers: []
+  providers: [
+    AdminGuard
+  ]
 })
 export class CoursesRoutingModule { }
