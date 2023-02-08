@@ -4,20 +4,21 @@ import { Observable } from "rxjs";
 import { Author } from "src/app/shared/model/author";
 import { AuthorsActions } from "./action-types";
 import { AuthorsState } from "./authors.reducer";
-import { getAuthors } from "./authors.selectors";
+import { getAddedAuthor, getAuthors } from "./authors.selectors";
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthorsStateFacade {
 
-  addedAuthor$: Observable<Author>;
+  addedAuthor$: Observable<Author | undefined>;
   authors$: Observable<Author[]>;
 
   constructor(
     private store: Store<AuthorsState>
   ) {
     this.authors$ = store.pipe(select(getAuthors));
+    this.addedAuthor$ = store.pipe(select(getAddedAuthor));
   }
 
   getAuthors() {
@@ -26,5 +27,9 @@ export class AuthorsStateFacade {
 
   addAuthor(author: Author) {
     this.store.dispatch(AuthorsActions.requestAddAuthor(author));
+  }
+
+  resetAddedAuthor() {
+    this.store.dispatch(AuthorsActions.resetAddedAuthor());
   }
 }

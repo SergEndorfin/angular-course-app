@@ -22,6 +22,7 @@ export const requestAddAuthor = createAction(
 );
 export const requestAddAuthorSuccess = createAction(
   '[Authors] Add request success',
+  props<{ author: Author }>()
 );
 export const requestAddAuthorFail = createAction(
   '[Authors] Add request fail',
@@ -29,7 +30,6 @@ export const requestAddAuthorFail = createAction(
 );
 
 
-// , , , , , resetAddedAuthor?
 export const resetAddedAuthor = createAction(
-  '[Authors] Reset added',
+  '[Authors] Reset added'
 );

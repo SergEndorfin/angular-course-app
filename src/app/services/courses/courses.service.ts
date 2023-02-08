@@ -38,7 +38,7 @@ export class CoursesService {
       .delete(`http://localhost:4000/courses/${id}`, { headers: this.sessionStorage.headers });
   }
 
-  createCourse(course: Course): Observable<any> {
+  createCourse(course: any): Observable<any> {
     return this.httpClient
       .post<any>('http://localhost:4000/courses/add', course, { headers: this.sessionStorage.headers })
       .pipe(

@@ -49,7 +49,7 @@ export class CoursesStateFacade {
   }
 
   createCourse(body: Course) {
-    this.store.dispatch(CoursesActions.requestCreateCourse({ body }));
+    this.store.dispatch(CoursesActions.requestCreateCourse({ course: body }));
   }
 
   deleteCourse(id: string) {

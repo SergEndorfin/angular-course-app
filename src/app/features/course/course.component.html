@@ -3,5 +3,5 @@
   <p><b>Description:</b><br><br> {{ course.description }}</p>
   <p><b>Creation Date:</b> {{ course.creationDate | properDate }}</p>
   <p><b>Duration:</b> {{ course.duration | minutesToHours }}</p>
-  <p><b>Authors:</b> {{ course.authors }}</p>
+  <p><b>Authors:</b> {{ course.authors.join(', ') }}</p>
 </div>

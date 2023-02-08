@@ -1,8 +1,7 @@
-import { Component, ViewChild, AfterViewInit, OnInit } from '@angular/core';
+import { Component, ViewChild, AfterViewInit, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { BehaviorSubject, map, Observable } from 'rxjs';
-import { AuthorsStoreService } from 'src/app/services/authors/authors-store.service';
-import { CoursesStoreService } from 'src/app/services/courses/courses-store.service';
+import { BehaviorSubject, map, Observable, Subscription } from 'rxjs';
+import { CoursesStateFacade } from 'src/app/store/courses/courses.facade';
 import { formToCourse } from '../../utils/converter';
 import { CreateEditCourseFormComponent } from '../create-edit-course-form/create-edit-course-form.component';
 
@@ -11,7 +10,7 @@ import { CreateEditCourseFormComponent } from '../create-edit-course-form/create
   templateUrl: './create-edit-course.component.html',
   styleUrls: ['./create-edit-course.component.scss']
 })
-export class CreateEditCourseComponent implements OnInit, AfterViewInit {
+export class CreateEditCourseComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild(CreateEditCourseFormComponent)
   createEditCourseForm!: CreateEditCourseFormComponent;
@@ -19,9 +18,11 @@ export class CreateEditCourseComponent implements OnInit, AfterViewInit {
   private isCreateCourseButtonActive$$: BehaviorSubject<boolean>;
   isCreateCourseButtonActive$: Observable<boolean>;
 
+  private formStatusChangesSubscription: Subscription;
+
   constructor(
     private router: Router,
-    private courseStoreService: CoursesStoreService
+    private courseStateFacade: CoursesStateFacade
   ) { }
 
   ngOnInit(): void {
@@ -30,11 +31,15 @@ export class CreateEditCourseComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.createEditCourseForm.form.statusChanges
+    this.formStatusChangesSubscription = this.createEditCourseForm.form.statusChanges
       .pipe(
         map(status => status === 'INVALID' ? true : false)
       )
       .subscribe(isValid => this.isCreateCourseButtonActive$$.next(isValid));
+  }
+
+  ngOnDestroy(): void {
+    this.formStatusChangesSubscription.unsubscribe();
   }
 
   addCourseCancelClicked(event: any) {
@@ -46,12 +51,10 @@ export class CreateEditCourseComponent implements OnInit, AfterViewInit {
     event.preventDefault();
     const course = formToCourse(this.createEditCourseForm.form);
 
-    let createUpdateCourse$: Observable<any>;
     if (course.id === '') {
-      createUpdateCourse$ = this.courseStoreService.createCourse(course);
+      this.courseStateFacade.createCourse(course);
     } else {
-      createUpdateCourse$ = this.courseStoreService.updateCourse(course);
+      this.courseStateFacade.editCourse(course, course.id);
     }
-    createUpdateCourse$.subscribe(() => this.router.navigate(['/']));
   }
 }

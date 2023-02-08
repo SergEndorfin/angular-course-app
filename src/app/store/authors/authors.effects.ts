@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
-import { catchError, concatMap, map, of, tap } from "rxjs";
+import { catchError, concatMap, map, of } from "rxjs";
 import { AuthorsService } from "src/app/services/authors/authors.service";
 import { AuthorsActions } from "./action-types";
 
@@ -16,7 +16,6 @@ export class AuthorsEffects {
           .pipe(
             map(authors => AuthorsActions.requestAuthorsSuccess({ authors })),
             catchError(err => {
-              console.log(' get authors error:', err);
               return of(AuthorsActions.requestAuthorsFail({ errorMessage: err.error["message"] }))
             })
           )
@@ -30,10 +29,8 @@ export class AuthorsEffects {
       concatMap(
         author => this.authorsService.addAuthor(author)
           .pipe(
-            tap(addedAythorResp => console.log('added Author responce:', addedAythorResp)),
-            map(authors => AuthorsActions.requestAddAuthorSuccess()),
+            map(author => AuthorsActions.requestAddAuthorSuccess({ author })),
             catchError(err => {
-              console.log(' Add authors error:', err);
               return of(AuthorsActions.requestAddAuthorFail({ errorMessage: err.error["message"] }))
             })
           )

@@ -6,7 +6,7 @@
     </div>
     <div class="description">
       <p>
-        <b>Authors: </b>{{ course.authors }}<br>
+        <b>Authors: </b>{{ course.authors.join(', ') }}<br>
         <b>Duration: </b>{{ course.duration | minutesToHours }}<br>
         <b>Created: </b>{{ course.creationDate | properDate }}
       </p>

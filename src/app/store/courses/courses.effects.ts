@@ -1,10 +1,10 @@
 import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
-import { catchError, concatMap, iif, map, mergeMap, of, tap } from "rxjs";
+import { catchError, concatMap, filter, iif, map, mergeMap, of, tap } from "rxjs";
 import { CoursesService } from "src/app/services/courses/courses.service";
 import { AuthorsStateFacade } from "../authors/authors.facade";
-import { mapAuthorsToCourses, mapAuthorsToSingleCourse } from "../service/authors-to-courses.service";
+import { copyCourse, mapAuthorsToCourses, mapAuthorsToSingleCourse } from "../service/authors-to-courses.service";
 import { CoursesActions } from "./action-types";
 import { CoursesStateFacade } from "./courses.facade";
 
@@ -47,7 +47,8 @@ export class CoursesEffects {
         .pipe(
           mapAuthorsToSingleCourse(this.authorsStateFacade.authors$),
           map(course => CoursesActions.requestSingleCourseSuccess(course)),
-          catchError(err => of(CoursesActions.requestSingleCourseFail({ errorMessage: err.error["result"] })))
+          catchError(err => of(CoursesActions.requestSingleCourseFail({ errorMessage: err.error["result"] }))
+          )
         )
       )
     )
@@ -59,22 +60,50 @@ export class CoursesEffects {
       concatMap(courseId => this.coursesService.deleteCourse(courseId.id)
         .pipe(
           tap(() => this.coursesStateFacade.getAllCourses()),
-          tap(() => () => this.router.navigateByUrl('/courses')),
           catchError(err => of(CoursesActions.requestDeleteCourseFail({ errorMessage: err.error["result"] })))
         )
       )
     )
   )
 
-  // editCourse$ = createEffect(
-  // createCourse$ = createEffect(
+  // editCourse$ = createEffect()
+
+  createCourse$ = createEffect(
+    () => this.actions$.pipe(
+      ofType(CoursesActions.requestCreateCourse),
+      tap(action => action.course.authors.forEach(authorName => this.authorsStateFacade.addAuthor({ name: authorName, id: '' }))),
+      map(action => {
+        const course = copyCourse(action.course);
+        const originCourseAuthorsLength = action.course.authors.length;
+        return { course, originCourseAuthorsLength };
+      }),
+      concatMap(data =>
+        this.authorsStateFacade.addedAuthor$
+          .pipe(
+            filter(addedAuthor => !!addedAuthor),
+            map(addedAuthor => addedAuthor!.id),
+            tap(authorId => data.course.authors.push(authorId)),
+            tap(() => this.authorsStateFacade.resetAddedAuthor()),
+            filter(() => data.course.authors.length === data.originCourseAuthorsLength),
+            map(() => data.course)
+          )
+      ),
+      concatMap(course => this.coursesService.createCourse(course)
+        .pipe(
+          map(() => CoursesActions.requestCreateCourseSuccess()),
+          catchError(err => of(CoursesActions.requestDeleteCourseFail({ errorMessage: err.error["result"] })))
+        ))
+    )
+  )
 
   redirectToTheCoursesPage$ = createEffect(
     () => this.actions$.pipe(
-      ofType(CoursesActions.requestCreateCourseSuccess),
-      ofType(CoursesActions.requestEditCourseSuccess),
-      ofType(CoursesActions.requestSingleCourseFail),
-      tap(() => () => this.router.navigateByUrl('/courses'))
+      filter(action =>
+        action.type === CoursesActions.requestSingleCourseFail.type ||
+        action.type === CoursesActions.requestCreateCourseSuccess.type ||
+        action.type === CoursesActions.requestEditCourseSuccess.type
+      ),
+      tap(() => this.router.navigate(['/courses'])),
     ),
     { dispatch: false }
   )

@@ -50,24 +50,24 @@ export const requestDeleteCourseFail = createAction(
 
 
 export const requestEditCourse = createAction(
-  '[Course] Delete edit request',
+  '[Course] Edit request',
   props<{ body: Course, id: string }>()
 );
 export const requestEditCourseSuccess = createAction(
-  '[Course] Delete edit success'
+  '[Course] Edit success'
 );
 export const requestEditCourseFail = createAction(
-  '[Course] Delete edit fail'
+  '[Course] Edit fail'
 );
 
 
 export const requestCreateCourse = createAction(
-  '[Course] Delete create request',
-  props<{ body: Course }>()
+  '[Course] Create request',
+  props<{ course: Course }>()
 );
 export const requestCreateCourseSuccess = createAction(
-  '[Course] Delete create success'
+  '[Course] Create success'
 );
 export const requestCreateCourseFail = createAction(
-  '[Course] Delete create fail'
+  '[Course] Create fail'
 );

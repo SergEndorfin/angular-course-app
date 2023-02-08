@@ -1,4 +1,4 @@
-import { concatMap, filter, first, map, mergeAll, mergeMap, Observable, tap, toArray } from "rxjs";
+import { concatMap, first, map, mergeAll, mergeMap, Observable, tap, toArray } from "rxjs";
 import { Author } from "src/app/shared/model/author";
 import { Course } from "src/app/shared/model/course";
 
@@ -8,7 +8,7 @@ export const mapAuthorsToCourses = (authors$: Observable<Author[]>) => (sourse: 
       mergeAll(),
       mergeMap(course => authors$
         .pipe(
-          map(authors => course.authors.map(authorId => authors.find(author => author.id === authorId)?.name)),
+          map(authors => course.authors.map(authorId => authors.find(author => author.id === authorId)!.name)),
           tap(authorNames => course.authors = authorNames),
           map(() => course),
           first()
@@ -22,9 +22,21 @@ export const mapAuthorsToSingleCourse = (authors$: Observable<Author[]>) => (sou
     concatMap(course => authors$
       .pipe(
         map(authors => course.authors.map(authorId => authors.find(author => author.id === authorId)?.name)),
-        tap(authorNames => course.authors = authorNames),
+        tap(authorNames => course.authors = authorNames.filter(name => !!name).map(name => name!.toString())),
         map(() => course)
       )
     ),
     first()
   );
+
+export const copyCourse = function (course: Course) {
+  const updatedCourse = {
+    title: course.title,
+    description: course.description,
+    duration: course.duration,
+    authors: new Array<string>()
+  }
+  if (course.id) Object.defineProperty(updatedCourse, 'id', course.id);
+  if (course.creationDate) Object.defineProperty(updatedCourse, 'creationDate', course.creationDate);
+  return updatedCourse;
+}

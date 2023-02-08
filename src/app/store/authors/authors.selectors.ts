@@ -9,7 +9,7 @@ export const getAuthors = createSelector(
   authorsState => authorsState.authors
 );
 
-export const getAddedAuthors = createSelector(
+export const getAddedAuthor = createSelector(
   selectAuthorsState,
   authorsState => authorsState.addedAuthor
 );

@@ -1,4 +1,3 @@
-import { state } from "@angular/animations";
 import { createReducer, on } from "@ngrx/store";
 import { Course } from "src/app/shared/model/course";
 import { CoursesActions } from "./action-types";
@@ -82,7 +81,5 @@ export const coursesReducer = createReducer(
       errorMessage: action.errorMessage,
       isSingleCourseLoading: false
     }
-  }),
-  // delete one:
-
+  })
 )
