@@ -26,9 +26,12 @@
     <h3>Author</h3>
     <span class="label">Author Name</span>
     <div class="row-field">
-      <input type="text" name="title" placeholder="Select author" #author>
-      <app-button [buttonText]="'CREATE AUTHOR'" (click)="addAuthor(author)"></app-button>
+      <input type="text" name="author" placeholder="Select author" #author
+        (blur)="addErrorStyle(authors.status === 'INVALID', authors.length === 0, $event.target)">
+      <app-button [buttonText]="'CREATE AUTHOR'" (click)=" addAuthor(author)"></app-button>
     </div>
+    <span *ngIf="authors.errors && (isAuthorNameFieldTouched$ | async)" class="error">At least one author is
+      required.</span>
     <div class="field" *ngIf="authors.controls.length > 0">
       <span class="label">Authors List</span>
       <div class="authors-list">

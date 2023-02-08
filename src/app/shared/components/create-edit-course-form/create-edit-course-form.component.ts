@@ -5,7 +5,7 @@ import { switchBorder } from '../../utils/element-border-switcher';
 import { Course } from '../../model/course';
 import { ActivatedRoute } from '@angular/router';
 import { CoursesStateFacade } from 'src/app/store/courses/courses.facade';
-import { filter, Subscription, tap } from 'rxjs';
+import { filter, Observable, of, Subscription, tap } from 'rxjs';
 
 @Component({
   selector: 'app-create-edit-course-form',
@@ -15,11 +15,12 @@ import { filter, Subscription, tap } from 'rxjs';
 export class CreateEditCourseFormComponent implements OnInit, OnDestroy {
 
   xMarkBtn = faXmark;
+  isAuthorNameFieldTouched$: Observable<boolean>;
 
   form = this.fb.nonNullable.group({
     title: ['', [Validators.required, Validators.minLength(5)]],
     description: ['', [Validators.required, Validators.minLength(10)]],
-    authors: this.fb.array([]),
+    authors: this.fb.array([], Validators.required),
     duration: ['', [Validators.required, Validators.pattern('[0-9]+'), Validators.min(0)]],
 
     // 2 hidden fields only for updating purpose:
@@ -96,11 +97,13 @@ export class CreateEditCourseFormComponent implements OnInit, OnDestroy {
           author: [author]
         }))
       })
-
   }
 
   addErrorStyle(errors: any, isTouched: boolean, element: any) {
     switchBorder(errors, isTouched, element);
+    if (element.name === 'author') {
+      this.isAuthorNameFieldTouched$ = of(true);
+    }
   }
 
   addAuthor(inputElement: HTMLInputElement) {
@@ -112,6 +115,8 @@ export class CreateEditCourseFormComponent implements OnInit, OnDestroy {
       this.authors.push(authorsForm);
       inputElement.value = '';
     }
+    this.isAuthorNameFieldTouched$ = of(true);
+    switchBorder(this.authors.status === 'INVALID', this.authors.length === 0, inputElement);
   }
 
   deleteAuthor(authorIndex: number) {

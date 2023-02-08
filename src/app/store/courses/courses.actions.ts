@@ -57,7 +57,8 @@ export const requestEditCourseSuccess = createAction(
   '[Course] Edit success'
 );
 export const requestEditCourseFail = createAction(
-  '[Course] Edit fail'
+  '[Course] Edit fail',
+  props<{ errorMessage: string }>()
 );
 
 
@@ -69,5 +70,6 @@ export const requestCreateCourseSuccess = createAction(
   '[Course] Create success'
 );
 export const requestCreateCourseFail = createAction(
-  '[Course] Create fail'
+  '[Course] Create fail',
+  props<{ errorMessage: string }>()
 );

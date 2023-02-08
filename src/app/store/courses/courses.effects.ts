@@ -4,7 +4,7 @@ import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { catchError, concatMap, filter, iif, map, mergeMap, of, tap } from "rxjs";
 import { CoursesService } from "src/app/services/courses/courses.service";
 import { AuthorsStateFacade } from "../authors/authors.facade";
-import { copyCourse, mapAuthorsToCourses, mapAuthorsToSingleCourse } from "../service/authors-to-courses.service";
+import { createAuthorsAndSetIds, mapAuthorsToCourses, mapAuthorsToSingleCourse } from "../service/authors-to-courses.service";
 import { CoursesActions } from "./action-types";
 import { CoursesStateFacade } from "./courses.facade";
 
@@ -63,35 +63,34 @@ export class CoursesEffects {
           catchError(err => of(CoursesActions.requestDeleteCourseFail({ errorMessage: err.error["result"] })))
         )
       )
-    )
+    ),
+    { dispatch: false }
   )
 
-  // editCourse$ = createEffect()
+  editCourse$ = createEffect(
+    () => this.actions$.pipe(
+      ofType(CoursesActions.requestEditCourse),
+      tap(action => action.body.authors.forEach(authorName => this.authorsStateFacade.addAuthor({ name: authorName, id: '' }))),
+      map(action => action.body),
+      createAuthorsAndSetIds(this.authorsStateFacade),
+      concatMap(course => this.coursesService.editCourse(course)
+        .pipe(
+          map(() => CoursesActions.requestEditCourseSuccess()),
+          catchError(err => of(CoursesActions.requestEditCourseFail({ errorMessage: err.error["result"] })))
+        ))
+    )
+  )
 
   createCourse$ = createEffect(
     () => this.actions$.pipe(
       ofType(CoursesActions.requestCreateCourse),
       tap(action => action.course.authors.forEach(authorName => this.authorsStateFacade.addAuthor({ name: authorName, id: '' }))),
-      map(action => {
-        const course = copyCourse(action.course);
-        const originCourseAuthorsLength = action.course.authors.length;
-        return { course, originCourseAuthorsLength };
-      }),
-      concatMap(data =>
-        this.authorsStateFacade.addedAuthor$
-          .pipe(
-            filter(addedAuthor => !!addedAuthor),
-            map(addedAuthor => addedAuthor!.id),
-            tap(authorId => data.course.authors.push(authorId)),
-            tap(() => this.authorsStateFacade.resetAddedAuthor()),
-            filter(() => data.course.authors.length === data.originCourseAuthorsLength),
-            map(() => data.course)
-          )
-      ),
+      map(action => action.course),
+      createAuthorsAndSetIds(this.authorsStateFacade),
       concatMap(course => this.coursesService.createCourse(course)
         .pipe(
           map(() => CoursesActions.requestCreateCourseSuccess()),
-          catchError(err => of(CoursesActions.requestDeleteCourseFail({ errorMessage: err.error["result"] })))
+          catchError(err => of(CoursesActions.requestCreateCourseFail({ errorMessage: err.error["result"] })))
         ))
     )
   )

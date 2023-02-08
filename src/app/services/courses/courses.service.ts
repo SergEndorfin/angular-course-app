@@ -46,7 +46,7 @@ export class CoursesService {
       );
   }
 
-  updateCourse(course: Course): Observable<any> {
+  editCourse(course: any): Observable<any> {
     return this.httpClient
       .put<any>(`http://localhost:4000/courses/${course.id}`, course, { headers: this.sessionStorage.headers })
       .pipe(

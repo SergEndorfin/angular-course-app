@@ -27,8 +27,4 @@ export class ButtonComponent {
       return faFaceSmile;
     }
   }
-
-  clicked() {
-    console.log('ButtonComponent clicked!');
-  }
 }
